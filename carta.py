@@ -3,5 +3,5 @@ class Carta:
         self.numero = numero
         self.palo = palo
 
-    def _repr__(self):
+    def __repr__(self):
         return f"{self.numero} de {self.palo}"
