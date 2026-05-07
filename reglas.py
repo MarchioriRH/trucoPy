@@ -30,3 +30,17 @@ def valor_truco(carta):
         return 2
     if carta.numero == 4:
         return 1
+
+def valor_envido(mano):
+    especiales = {10, 11, 12}
+
+    
+
+    # if (carta1.numero, carta2.numero) in especiales:
+    #     return 20
+    # elif carta1.numero in especiales and carta2.numero not in especiales:
+    #     return 20 + carta2.numero
+    # elif carta1.numero not in especiales and carta2.numero in especiales:
+    #     return carta1.numero + 20
+    # else (carta1.numero, carta2.numero) not in especiales:
+    #     return carta1.numero + carta2.numero + 20    

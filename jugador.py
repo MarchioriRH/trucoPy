@@ -1,11 +1,12 @@
-from reglas import valor_truco
+from reglas import valor_truco, valor_envido
 
 class Jugador:
-    def __init__(self, nombre, estrategia_cartas, estrategia_truco, estado):
+    def __init__(self, nombre, estrategia_cartas, estrategia_truco, estrategia_envido, estado):
         self.nombre = nombre
         self. mano = []
         self.estrategia_cartas = estrategia_cartas
         self.estrategia_truco = estrategia_truco
+        self.estrategia_envido = estrategia_envido
         self.estado = estado
 
     def recibir_cartas(self, cartas):
@@ -16,6 +17,16 @@ class Jugador:
         self.mano.remove(carta)
         return(carta)
 
+    def calcular_envido(self):
+        tanto = self.estrategia_envido.calcular_tanto(self.mano)
+        return(tanto)
+
+    def decidir_cantar_envido(self):
+        return self.estrategia_envido.decidir_cantar(self.mano, self.estado)
+
+    def aceptar_envido(self, nivel):
+        return self.estrategia_envido.aceptar(self.mano, nivel, self.estado)
+
     def decidir_cantar_truco(self):
         return self.estrategia_truco.decidir_cantar(self.mano, self.estado)
 
@@ -25,5 +36,11 @@ class Jugador:
     def mostrar_mano(self):
         for i, carta in enumerate(self.mano):
             print(f"{i}: {carta}")
+
+    def cambiar_estrategia_cartas(self, estrategia_cartas):
+        self.estrategia_cartas = estrategia_cartas
+
+    def cambiar_estrategia_truco(self, estrategia_truco):
+        self.estrategia_truco = estrategia_truco
 
     
