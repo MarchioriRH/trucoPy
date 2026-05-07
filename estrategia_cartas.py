@@ -21,7 +21,7 @@ class CartaRandom(EstrategiaCartas):
         return random.choice(mano)
 
 class EstrategiaEnvido:
-    def calcular_envido(mano):
+    def calcular_envido(self, mano):
         # 1. Normalizar valores: las figuras valen 0 para el envido
         def valor_envido(carta):
             return carta.numero if carta.numero < 10 else 0
