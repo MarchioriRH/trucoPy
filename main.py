@@ -14,6 +14,9 @@ se_canto_truco = False
 se_canto_envido = False
 no_quiero_truco = False
 no_quiero_envido = False
+j1_canto_flor = False
+j2_canto_flor = False
+hay_flor = False
 parda = False
 
 mazo = Mazo()
@@ -41,6 +44,9 @@ canto_envido = CantoEnvido()
 
 bazas_j1 = 0
 bazas_j2 = 0
+
+print(f"Mano J1: {j1.mano}")
+print(f"Mano J2: {j2.mano}")
 
 def jugar_carta_mano():
     global bazas_j1
@@ -108,9 +114,57 @@ def calcular_ganador_bazas():
     else: 
         parda = False
 
-for ronda in range(3):
-    print(f"\n--- Baza {ronda+ 1} ---")
-    if not se_canto_envido:
+def verificar_flor():    
+    global bazas_j1
+    global bazas_j2
+    global parda
+
+    flor_j1 = j1.verificar_flor()
+    flor_j2 = j2.verificar_flor()
+
+    if flor_j1 and not flor_j2:
+        print("J1 tiene flor, gana la mano")
+        bazas_j1 += 1
+        j1_canto_flor = True
+        tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+        hay_flor = True
+    elif flor_j2 and not flor_j1:
+        print("J2 tiene flor, gana la mano")
+        bazas_j2 += 1
+        j2_canto_flor = True
+        tanteador.sumar_puntos(2, canto_envido.puntos_flor())
+        hay_flor = True
+    elif flor_j1 and flor_j2:
+        print("Ambos tienen flor, se comparan los tantos")
+        j1_canto_flor = True
+        j2_canto_flor = True
+        comparacion_flor_j1 = j1.calcular_envido()
+        comparacion_flor_j2 = j2.calcular_envido()
+        if comparacion_flor_j1 > comparacion_flor_j2:
+            print("J1 gana la flor")
+            bazas_j1 += 1
+            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+        elif comparacion_flor_j2 > comparacion_flor_j1:
+            print("J2 gana la flor")
+            bazas_j2 += 1
+            tanteador.sumar_puntos(2, canto_envido.puntos_flor())
+        else:
+            print("Empate en la flor, gana J1")
+            bazas_j1 += 1
+            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+        hay_flor = True 
+       
+
+# for ronda in range(3):
+# print(f"\n--- Baza {ronda+ 1} ---")
+    
+verificar_flor()
+
+if not hay_flor:
+    print("Ningún jugador tiene flor, se procede a cantar envido")
+   
+    if not se_canto_envido: 
+        
         if j1.decidir_cantar_envido():
             canto_envido.cantar(j1)
             print("Jugador 1 canta Envido")
@@ -126,6 +180,7 @@ for ronda in range(3):
             else:
                 canto_envido.aceptar()
                 print("Jugador 2 quiso")
+                jugar_envido()
 
         elif j2.decidir_cantar_envido():
             canto_envido.cantar(j2)
@@ -142,56 +197,65 @@ for ronda in range(3):
             else:
                 canto_envido.aceptar()
                 print("Jugador 1 quiso")
+                jugar_envido()
+        se_canto_envido = True
+        hay_flor = True
+        if no_quiero_envido:
+            print("No se quiso el envido, se procede al truco")
+        else:
+            print("No se canto el envido, se procede al truco")
 
-        jugar_envido()
-    # else:
-    #     jugar_envido()
+if not se_canto_truco:
+    if j1.decidir_cantar_truco():
+        canto_truco.cantar(j1)
+        print("Jugador 1 canta Truco")
+        se_canto_truco = True
+
+        if not j2.aceptar_truco(j2.mano):
+            no_quiero_truco = True
+            canto_truco.rechazar(j2)
+            print("Jugador 2 no quiso")
+            print("Jugador 1 gana", canto_truco.puntos_por_rechazo())
+            tanteador.sumar_puntos(1, canto_truco.puntos_por_rechazo())
+            # return
+        else:
+            canto_truco.aceptar()
+            print("Jugador 2 quiso")
+
+    elif j2.decidir_cantar_truco():
+        canto_truco.cantar(j2)
+        print("Jugador 2 canta Truco")
+        se_canto_truco = True
+
+        if not j1.aceptar_truco(j1.mano):
+            no_quiero_truco = True
+            canto_truco.rechazar(j1)
+            print("Jugador 1 no quiso")
+            print("Jugador 2 gana", canto_truco.puntos_por_rechazo())
+            tanteador.sumar_puntos(2, canto_truco.puntos_por_rechazo())
+            # return
+        else:
+            canto_truco.aceptar()
+            print("Jugador 1 quiso")
+
+    jugar_carta_mano()
 
 
-    if not se_canto_truco:
-        if j1.decidir_cantar_truco():
-            canto_truco.cantar(j1)
-            print("Jugador 1 canta Truco")
-            se_canto_truco = True
+if j1_canto_flor:
+    print(f"Flor J1: {j1.mano}")
+if j2_canto_flor:
+    print(f"Flor J2: {j2.mano}")
+if j1_canto_flor and j2_canto_flor: 
+    print(f"Flor J1: {j1.mano}")
+    print(f"Flor J2: {j2.mano}")
 
-            if not j2.aceptar_truco(j2.mano):
-                no_quiero_truco = True
-                canto_truco.rechazar(j2)
-                print("Jugador 2 no quiso")
-                print("Jugador 1 gana", canto_truco.puntos_por_rechazo())
-                tanteador.sumar_puntos(1, canto_truco.puntos_por_rechazo())
-                # return
-            else:
-                canto_truco.aceptar()
-                print("Jugador 2 quiso")
+print("\nResultado final:")
+print("Bazas J1:", bazas_j1)
+print("Bazas J2:", bazas_j2)
 
-        elif j2.decidir_cantar_truco():
-            canto_truco.cantar(j2)
-            print("Jugador 2 canta Truco")
-            se_canto_truco = True
+calcular_ganador_bazas()
 
-            if not j1.aceptar_truco(j1.mano):
-                no_quiero_truco = True
-                canto_truco.rechazar(j1)
-                print("Jugador 1 no quiso")
-                print("Jugador 2 gana", canto_truco.puntos_por_rechazo())
-                tanteador.sumar_puntos(2, canto_truco.puntos_por_rechazo())
-                # return
-            else:
-                canto_truco.aceptar()
-                print("Jugador 1 quiso")
-
-        jugar_carta_mano()
-    else:
-        jugar_carta_mano()
-
-    print("\nResultado final:")
-    print("Bazas J1:", bazas_j1)
-    print("Bazas J2:", bazas_j2)
-
-    calcular_ganador_bazas()
-    
-    tanteador.mostrar()
+tanteador.mostrar()
 
 print("\nTanteador final: ")
 tanteador.mostrar()

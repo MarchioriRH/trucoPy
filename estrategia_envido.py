@@ -50,6 +50,17 @@ class EnvidoAdaptativo(EstrategiaEnvido):
 
         return tanto > 7
 
+    def verificar_flor(self, mano):
+        palos = {}
+        for carta in mano:
+            if carta.palo not in palos:
+                palos[carta.palo] = []
+            palos[carta.palo].append(carta)
+
+        for cartas in palos.values():
+            if len(cartas) >= 3:
+                return True
+        return False
    
     def calcular_envido(self, mano):
         # 1. Normalizar valores: las figuras valen 0 para el envido

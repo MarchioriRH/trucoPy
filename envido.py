@@ -30,3 +30,6 @@ class CantoEnvido:
 
     def puntos_por_rechazo(self):
         return self.nivel - 1
+
+    def puntos_flor(self):
+        return 3

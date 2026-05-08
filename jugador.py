@@ -17,6 +17,10 @@ class Jugador:
         self.mano.remove(carta)
         return(carta)
 
+    def verificar_flor(self):
+        flor = self.estrategia_envido.verificar_flor(self.mano)
+        return(flor)
+
     def calcular_envido(self):
         tanto = self.estrategia_envido.calcular_envido(self.mano)
         return(tanto)
