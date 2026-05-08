@@ -73,28 +73,27 @@ def jugar_envido():
     global bazas_j2
     global parda
 
-    tanto_j1 = j1.calcular_tanto()
-    tanto_j2 = j2.calcular_tanto()
+    tanto_j1 = j1.calcular_envido()
+    tanto_j2 = j2.calcular_envido()
 
     print(f"J1 canta: {tanto_j1}")
-    print(f"J2 juega: {tanto_j2}")
+    print(f"J2 canta: {tanto_j2}")
     
     #Ver porque suma todos los puntos. Ordenar main.
     if tanto_j1 > tanto_j2:
-        print("Gana J1 la baza")
+        print("Gana J1 el envido")
         bazas_j1 += 1
         tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
 
     elif tanto_j1 < tanto_j2:
-        print("Gana J2 la baza")
+        print("Gana J2 el envido")
         bazas_j2 += 1
         tanteador.sumar_puntos(2, canto_envido.puntos_en_juego())
     
     else:
-        parda = True
         print("Parda, gana J1")
-        bazas_j2 += 1
-        tanteador.sumar_puntos(2, canto_envido.puntos_en_juego())
+        bazas_j1 += 1
+        tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
 
 def calcular_ganador_bazas():
     global bazas_j1, bazas_j2
@@ -145,8 +144,8 @@ for ronda in range(3):
                 print("Jugador 1 quiso")
 
         jugar_envido()
-    else:
-        jugar_envido()
+    # else:
+    #     jugar_envido()
 
 
     if not se_canto_truco:

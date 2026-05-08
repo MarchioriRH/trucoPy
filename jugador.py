@@ -18,7 +18,7 @@ class Jugador:
         return(carta)
 
     def calcular_envido(self):
-        tanto = self.estrategia_cartas.calcular_tanto(self.mano)
+        tanto = self.estrategia_envido.calcular_envido(self.mano)
         return(tanto)
 
     def decidir_cantar_envido(self):
