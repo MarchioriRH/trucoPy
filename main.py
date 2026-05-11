@@ -54,25 +54,40 @@ def jugar_carta_mano():
     global parda
 
     carta_j1 = j1.jugar_carta()
-    carta_j2 = j2.jugar_carta()
-
     print(f"J1 juega: {carta_j1}")
-    print(f"J2 juega: {carta_j2}")
     
-    #Ver porque suma todos los puntos. Ordenar main.
-    if valor_truco(carta_j1) > valor_truco(carta_j2):
-        print("Gana J1 la baza")
-        bazas_j1 += 1
-        tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+    carta_j2 = j2.analizar_jugada(carta_j1)
+    if valor_truco(carta_j2) > valor_truco(carta_j1):
+        print("J2 juega: ", carta_j2)
+        j2.mano.remove(carta_j2)
+        print("J2 juega: ", carta_j2)
+    else:
+        carta_j2 = j2.jugar_carta()
+        print(f"J2 juega: {carta_j2}")
 
-    elif valor_truco(carta_j1) < valor_truco(carta_j2):
+    carta_j1 = j2.analizar_jugada(carta_j2)
+    if valor_truco(carta_j1) > valor_truco(carta_j2):
+        print("J1 juega: ", carta_j1)
+        j1.mano.remove(carta_j1)
+    else:
         print("Gana J2 la baza")
         bazas_j2 += 1
         tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
+        
+    #Ver porque suma todos los puntos. Ordenar main.
+    # if valor_truco(carta_j1) > valor_truco(carta_j2):
+    #     print("Gana J1 la baza")
+    #     bazas_j1 += 1
+    #     tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+
+    # elif valor_truco(carta_j1) < valor_truco(carta_j2):
+    #     print("Gana J2 la baza")
+    #     bazas_j2 += 1
+    #     tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
     
-    else:
-        parda = True
-        print("Parda")
+    # else:
+    #     parda = True
+    #     print("Parda")
 
 def jugar_envido():
     global bazas_j1
@@ -161,7 +176,7 @@ def verificar_flor():
 verificar_flor()
 
 if not hay_flor:
-    print("Ningún jugador tiene flor, se procede a cantar envido")
+    print("Ningún jugador tiene flor, se procede con el envido")
    
     if not se_canto_envido: 
         
@@ -198,12 +213,13 @@ if not hay_flor:
                 canto_envido.aceptar()
                 print("Jugador 1 quiso")
                 jugar_envido()
-        se_canto_envido = True
+        # se_canto_envido = True
         hay_flor = True
         if no_quiero_envido:
             print("No se quiso el envido, se procede al truco")
-        else:
+        if not se_canto_envido:
             print("No se canto el envido, se procede al truco")
+            se_canto_envido = True
 
 if not se_canto_truco:
     if j1.decidir_cantar_truco():

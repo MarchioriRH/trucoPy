@@ -47,4 +47,11 @@ class Jugador:
     def cambiar_estrategia_truco(self, estrategia_truco):
         self.estrategia_truco = estrategia_truco
 
+    def analizar_jugada(self, carta_jugada):
+        mano_ordenada = sorted(self.mano, key=valor_truco)
+        for carta in mano_ordenada:
+            if valor_truco(carta) > valor_truco(carta_jugada):
+                return carta
+        return mano_ordenada[0]  # Si no tiene carta más alta, juega la primera carta
+
     
