@@ -9,6 +9,7 @@ from truco import CantoTruco
 from envido import CantoEnvido
 from tanteador import Tanteador
 from estado_partido import EstadoPartido
+from partes_juego import JugarTruco
 
 se_canto_truco = False
 se_canto_envido = False
@@ -16,6 +17,8 @@ no_quiero_truco = False
 no_quiero_envido = False
 j1_canto_flor = False
 j2_canto_flor = False
+j1_hizo_primera = False
+j2_hizo_primera = False
 hay_flor = False
 parda = False
 
@@ -23,6 +26,7 @@ mazo = Mazo()
 mazo.mezclar()
 
 tanteador = Tanteador()
+juego = JugarTruco()
 
 
 mano1 = mazo.repartir(3)
@@ -54,40 +58,50 @@ def jugar_carta_mano():
     global parda
 
     carta1_j1 = j1.jugar_carta()
-    print(f"J1 juega: {carta1_j1}")
+    print(f"J1 juega carta 1: {carta1_j1}")
     
     carta1_j2 = j2.analizar_jugada(carta1_j1) 
     # carta1_j2 mata a carta1_j1
     if valor_truco(carta1_j2) > valor_truco(carta1_j1):
-        print(f"J2 juega: {carta1_j2} mata a {carta1_j1}")
+        print(f"J2 juega carta 1: {carta1_j2} mata a {carta1_j1}")
+        j2_hizo_primera = True
         carta2_j2 = j2.jugar_carta()
         # Juega la segunda carta
-        print("J2 juega: ", carta2_j2)
+        print(f"J2 juega carta 2: {carta2_j2}")
 
         # J1 analiza la carta jugada por J2 y elige la carta a jugar
         carta2_j1 = j1.analizar_jugada(carta2_j2)
         # Si la carta de J1 mata a la carta de J2
         if valor_truco(carta2_j1) > valor_truco(carta2_j2):
-            print(f"J1 juega: {carta2_j1} mata a {carta2_j2}")
+            print(f"J1 juega carta 2: {carta2_j1} mata a {carta2_j2}")
             # J1 juega la tercera carta
             carta3_j1 = j1.jugar_carta()
-            print("J1 juega: ", carta3_j1)
+            print(f"J1 juega carta 3: {carta3_j1}")
 
             # J2 analiza la carta jugada por J1 y elige la carta a jugar
             carta3_j2 = j2.analizar_jugada(carta3_j1)
             # Si la carta de J2 mata a la carta de J1
             if valor_truco(carta3_j2) > valor_truco(carta3_j1):
-                print(f"J2 juega: {carta3_j2} mata a {carta3_j1}")
+                print(f"J2 juega carta 3: {carta3_j2} mata a {carta3_j1}")
                 # J2 gana la baza
                 print("Gana J2 la baza")
                 bazas_j1 += 1
                 tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
-            else:
+            elif valor_truco(carta3_j1) > valor_truco(carta3_j2):
                 # J2 no mata a la carta de J1, gana J1 la baza
                 print(f"J2 no mata a {carta3_j1}")
                 print("Gana J1 la baza")
                 bazas_j1 += 1
                 tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+            else:
+                if j1_hizo_primera:
+                    print("Gana J1 por primera")
+                    bazas_j1 += 1
+                    tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+                else:
+                    print("Gana J2 por primera")
+                    bazas_j2 += 1
+                    tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())    
         else:
             # J1 no mata a la carta de J2, gana J2 la baza
             print(f"J1 no mata a {carta2_j2}")
@@ -97,44 +111,55 @@ def jugar_carta_mano():
                
     elif valor_truco(carta1_j1) > valor_truco(carta1_j2):
         #carta1_j2 = j2.jugar_carta()
-        print(f"J2 juega: {carta1_j2} no mata a {carta1_j1}")
+        print(f"J2 juega carta 1: {carta1_j2} no mata a {carta1_j1}")
 
         carta2_j1 = j1.analizar_jugada(carta1_j2)
-        print(f"J1 juega: {carta2_j1}")
+        j1_hizo_primera = True
+        print(f"J1 juega carta 2: {carta2_j1}")
 
         carta2_j2 = j2.analizar_jugada(carta2_j1)
         if valor_truco(carta2_j2) > valor_truco(carta2_j1):
-            print(f"J2 juega: {carta2_j2} mata a {carta2_j1}")
+            print(f"J2 juega carta 2: {carta2_j2} mata a {carta2_j1}")
             carta3_j2 = j2.jugar_carta()
-            print(f"J2 juega: {carta3_j2}")
+            print(f"J2 juega carta 3: {carta3_j2}")
 
             carta3_j1 = j1.jugar_carta()
             if valor_truco(carta3_j2) < valor_truco(carta3_j1):
-                print(f"J2 juega: {carta3_j2} mata a {carta2_j1}")
+                print(f"J1 juega carta 3: {carta3_j1} mata a {carta3_j2}")
+                print("Gana J1 la baza")
+                bazas_j1 += 1
+                tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+            elif valor_truco(carta3_j2) > valor_truco(carta3_j1):
+                print(f"J1 no mata a {carta3_j2}")
                 print("Gana J2 la baza")
                 bazas_j2 += 1
                 tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
             else:
-                print(f"J2 no mata a {carta2_j1}")
-                print("Gana J1 la baza")
-                bazas_j1 += 1
-                tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
-
-
-
-    
+                if j2_hizo_primera:
+                    print("Gana J2 por primera")
+                    bazas_j2 += 1
+                    tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
+                else:
+                    print("Gana J1 por primera")
+                    bazas_j1 += 1
+                    tanteador.sumar_puntos(1, canto_truco.puntos_en_juego()) 
+        else:
+            print(f"J2 no mata a {carta2_j1}")
+            print("Gana J1 la baza")
+            bazas_j1 += 1
+            tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())    
     elif valor_truco(carta1_j1) == valor_truco(carta1_j2):
         parda = True
         print("Parda")
         carta2_j1 = j1.jugar_carta()
         carta2_j2 = j2.jugar_carta()
         if valor_truco(carta2_j1) > valor_truco(carta2_j2):
-            print(f"J1 juega: {carta2_j1} mata a {carta2_j2}")
+            print(f"J1 juega carta 2: {carta2_j1} mata a {carta2_j2}")
             print("Gana J1 la baza")
             bazas_j1 += 1
             tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
         elif valor_truco(carta2_j2) > valor_truco(carta2_j1):
-            print(f"J2 juega: {carta2_j2} mata a {carta2_j1}")
+            print(f"J2 juega carta 2: {carta2_j2} mata a {carta2_j1}")
             print("Gana J2 la baza")
             bazas_j2 += 1
             tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
@@ -143,44 +168,44 @@ def jugar_carta_mano():
             carta3_j1 = j1.jugar_carta()
             carta3_j2 = j2.jugar_carta()
             if valor_truco(carta3_j1) > valor_truco(carta3_j2):
-                print(f"J1 juega: {carta3_j1} mata a {carta3_j2}")
+                print(f"J1 juega carta 3: {carta3_j1} mata a {carta3_j2}")
                 print("Gana J1 la baza")
                 bazas_j1 += 1
                 tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
             elif valor_truco(carta3_j2) > valor_truco(carta3_j1):
-                print(f"J2 juega: {carta3_j2} mata a {carta3_j1}")
+                print(f"J2 juega carta 3: {carta3_j2} mata a {carta3_j1}")
                 print("Gana J2 la baza")
                 bazas_j2 += 1
                 tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
             else:    
                 print("3era parda, nadie gana la baza")
 
-def jugar_envido():
-    global bazas_j1
-    global bazas_j2
-    global parda
+# def jugar_envido():
+#     global bazas_j1
+#     global bazas_j2
+#     global parda
 
-    tanto_j1 = j1.calcular_envido()
-    tanto_j2 = j2.calcular_envido()
+#     tanto_j1 = j1.calcular_envido()
+#     tanto_j2 = j2.calcular_envido()
 
-    print(f"J1 canta: {tanto_j1}")
-    print(f"J2 canta: {tanto_j2}")
+#     print(f"J1 canta: {tanto_j1}")
+#     print(f"J2 canta: {tanto_j2}")
     
-    #Ver porque suma todos los puntos. Ordenar main.
-    if tanto_j1 > tanto_j2:
-        print("Gana J1 el envido")
-        bazas_j1 += 1
-        tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
+#     #Ver porque suma todos los puntos. Ordenar main.
+#     if tanto_j1 > tanto_j2:
+#         print("Gana J1 el envido")
+#         bazas_j1 += 1
+#         tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
 
-    elif tanto_j1 < tanto_j2:
-        print("Gana J2 el envido")
-        bazas_j2 += 1
-        tanteador.sumar_puntos(2, canto_envido.puntos_en_juego())
+#     elif tanto_j1 < tanto_j2:
+#         print("Gana J2 el envido")
+#         bazas_j2 += 1
+#         tanteador.sumar_puntos(2, canto_envido.puntos_en_juego())
     
-    else:
-        print("Parda, gana J1")
-        bazas_j1 += 1
-        tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
+#     else:
+#         print("Parda, gana J1")
+#         bazas_j1 += 1
+#         tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
 
 def calcular_ganador_bazas():
     global bazas_j1, bazas_j2
@@ -195,51 +220,52 @@ def calcular_ganador_bazas():
     else: 
         parda = False
 
-def verificar_flor():    
-    global bazas_j1
-    global bazas_j2
-    global parda
+# def verificar_flor():    
+#     global bazas_j1
+#     global bazas_j2
+#     global parda
+#     global j1_canto_flor
+#     global j2_canto_flor
+#     hay_flor = False
 
-    flor_j1 = j1.verificar_flor()
-    flor_j2 = j2.verificar_flor()
+#     flor_j1 = j1.verificar_flor()
+#     flor_j2 = j2.verificar_flor()
 
-    if flor_j1 and not flor_j2:
-        print("J1 tiene flor, gana la mano")
-        bazas_j1 += 1
-        j1_canto_flor = True
-        tanteador.sumar_puntos(1, canto_envido.puntos_flor())
-        hay_flor = True
-    elif flor_j2 and not flor_j1:
-        print("J2 tiene flor, gana la mano")
-        bazas_j2 += 1
-        j2_canto_flor = True
-        tanteador.sumar_puntos(2, canto_envido.puntos_flor())
-        hay_flor = True
-    elif flor_j1 and flor_j2:
-        print("Ambos tienen flor, se comparan los tantos")
-        j1_canto_flor = True
-        j2_canto_flor = True
-        comparacion_flor_j1 = j1.calcular_envido()
-        comparacion_flor_j2 = j2.calcular_envido()
-        if comparacion_flor_j1 > comparacion_flor_j2:
-            print("J1 gana la flor")
-            bazas_j1 += 1
-            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
-        elif comparacion_flor_j2 > comparacion_flor_j1:
-            print("J2 gana la flor")
-            bazas_j2 += 1
-            tanteador.sumar_puntos(2, canto_envido.puntos_flor())
-        else:
-            print("Empate en la flor, gana J1")
-            bazas_j1 += 1
-            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
-        hay_flor = True 
+#     if flor_j1 and not flor_j2:
+#         print("J1 canta flor")
+#         bazas_j1 += 1
+#         j1_canto_flor = True
+#         tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+#         hay_flor = True
+#     elif flor_j2 and not flor_j1:
+#         print("J2 canta flor")
+#         bazas_j2 += 1
+#         j2_canto_flor = True
+#         tanteador.sumar_puntos(2, canto_envido.puntos_flor())
+#         hay_flor = True
+#     elif flor_j1 and flor_j2:
+#         print("Ambos tienen flor, se comparan los tantos")
+#         j1_canto_flor = True
+#         j2_canto_flor = True
+#         comparacion_flor_j1 = j1.calcular_envido()
+#         comparacion_flor_j2 = j2.calcular_envido()
+#         if comparacion_flor_j1 > comparacion_flor_j2:
+#             print("J1 gana la flor")
+#             bazas_j1 += 1
+#             tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+#         elif comparacion_flor_j2 > comparacion_flor_j1:
+#             print("J2 gana la flor")
+#             bazas_j2 += 1
+#             tanteador.sumar_puntos(2, canto_envido.puntos_flor())
+#         else:
+#             print("Empate en la flor, gana J1")
+#             bazas_j1 += 1
+#             tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+#         hay_flor = True 
+#     return hay_flor
        
-
-# for ronda in range(3):
-# print(f"\n--- Baza {ronda+ 1} ---")
     
-verificar_flor()
+juego.verificar_flor(j1, j2)
 
 if not hay_flor:
     print("Ningún jugador tiene flor, se procede con el envido")
@@ -261,7 +287,7 @@ if not hay_flor:
             else:
                 canto_envido.aceptar()
                 print("Jugador 2 quiso")
-                jugar_envido()
+                juego.jugar_envido()
 
         elif j2.decidir_cantar_envido():
             canto_envido.cantar(j2)
@@ -278,7 +304,7 @@ if not hay_flor:
             else:
                 canto_envido.aceptar()
                 print("Jugador 1 quiso")
-                jugar_envido()
+                juego.jugar_envido()
         # se_canto_envido = True
         hay_flor = True
         if no_quiero_envido:
@@ -320,14 +346,17 @@ if not se_canto_truco:
             canto_truco.aceptar()
             print("Jugador 1 quiso")
 
-    jugar_carta_mano()
+    if not no_quiero_truco:
+        jugar_carta_mano()
+    else:
+        print("No se quiso el truco, se procede a mostrar el tanteador")
 
 
 if j1_canto_flor:
     print(f"Flor J1: {j1.mano}")
-if j2_canto_flor:
+elif j2_canto_flor:
     print(f"Flor J2: {j2.mano}")
-if j1_canto_flor and j2_canto_flor: 
+elif j1_canto_flor and j2_canto_flor: 
     print(f"Flor J1: {j1.mano}")
     print(f"Flor J2: {j2.mano}")
 
