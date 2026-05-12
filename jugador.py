@@ -51,7 +51,11 @@ class Jugador:
         mano_ordenada = sorted(self.mano, key=valor_truco)
         for carta in mano_ordenada:
             if valor_truco(carta) > valor_truco(carta_jugada):
-                return carta
-        return mano_ordenada[0]  # Si no tiene carta más alta, juega la primera carta
+                carta_elegida = carta
+                self.mano.remove(carta)
+                return carta_elegida
+        carta_elegida = mano_ordenada[0]
+        self.mano.remove(carta_elegida)        
+        return carta_elegida  # Si no tiene carta más alta, juega la primera carta
 
     
