@@ -102,21 +102,27 @@ class JugarTruco:
             comparacion_flor_j1 = j1.calcular_envido()
             comparacion_flor_j2 = j2.calcular_envido()
             if comparacion_flor_j1 > comparacion_flor_j2:
-                print("J1 gana la flor")
-                print(f"Puntos en juego: {canto_envido.puntos_flor()}")
-                tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+                self.mostrar_resultado_ganador(1, canto_envido, tanteador)
                 ganador_flor = 1
             elif comparacion_flor_j2 > comparacion_flor_j1:
-                print("J2 gana la flor")
-                print(f"Puntos en juego: {canto_envido.puntos_flor()}")
+                self.mostrar_resultado_ganador(2, canto_envido, tanteador)
                 tanteador.sumar_puntos(2, canto_envido.puntos_flor())
                 ganador_flor = 2
             else:
-                print("Empate en la flor, gana J1")
-                print(f"Puntos en juego: {canto_envido.puntos_flor()}")
+                self.mostrar_resultado_ganador(0, canto_envido, tanteador)
                 tanteador.sumar_puntos(1, canto_envido.puntos_flor())
                 ganador_flor = 1
         return ganador_flor
+
+    def mostrar_resultado_ganador_for(self, jugador, canto_envido, tanteador):
+        if jugador != 0:
+            print(f"Jugador {jugador} gana la ronda")
+            print(f"Puntos en juego: {canto_envido.puntos_flor()}")
+            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
+        else:
+            print("Empate en la ronda, gana J1")
+            print(f"Puntos en juego: {canto_envido.puntos_flor()}")
+            tanteador.sumar_puntos(1, canto_envido.puntos_flor())
 
     def jugar_truco(self, j1, j2, canto_truco, tanteador):
         no_quiero_truco = False

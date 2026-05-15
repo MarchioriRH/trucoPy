@@ -24,9 +24,6 @@ j2_hizo_primera = False
 hay_flor = False
 parda = False
 ganador_flor = -1
-flor_ganadora = []
-
-
 
 tanteador = Tanteador()
 juego = JugarTruco()
