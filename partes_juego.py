@@ -8,7 +8,7 @@ from estado_partido import EstadoPartido
 
 
 class JugarTruco:
-    def jugar_envido(self, j1, j2, canto_envido, tanteador):
+    def comparar_tantos(self, j1, j2, canto_envido, tanteador):
         global parda
 
         tanto_j1 = j1.calcular_envido()
@@ -33,7 +33,51 @@ class JugarTruco:
             print(f"Puntos en juego: {canto_envido.puntos_en_juego()}")
             tanteador.sumar_puntos(1, canto_envido.puntos_en_juego())
 
+    def jugar_envido(self, j1, j2, canto_envido, tanteador): 
+        no_quiero_envido = False
+        se_canto_envido = False
         
+        if j1.decidir_cantar_envido():
+            canto_envido.cantar(j1)
+            print("Jugador 1 canta Envido")
+            se_canto_envido = True
+            
+            if not j2.aceptar_envido(j2.mano):
+                no_quiero_envido = True
+                canto_envido.rechazar(j2)
+                print("Jugador 2 no quiso")
+                print("Jugador 1 gana", canto_envido.puntos_por_rechazo())
+                tanteador.sumar_puntos(1, canto_envido.puntos_por_rechazo())
+                
+            else:
+                canto_envido.aceptar()
+                print("Jugador 2 quiso")
+                self.comparar_tantos(j1, j2, canto_envido, tanteador)
+
+        elif j2.decidir_cantar_envido():
+            canto_envido.cantar(j2)
+            print("Jugador 2 canta Envido")
+            se_canto_envido = True
+
+            if not j1.aceptar_envido(j1.mano):
+                no_quiero_envido = True
+                canto_envido.rechazar(j1)
+                print("Jugador 1 no quiso")
+                print("Jugador 2 gana", canto_envido.puntos_por_rechazo())
+                tanteador.sumar_puntos(2, canto_envido.puntos_por_rechazo())
+                
+            else:
+                canto_envido.aceptar()
+                print("Jugador 1 quiso")
+                self.comparar_tantos(j1, j2, canto_envido, tanteador)
+        
+        # hay_flor = True
+        if no_quiero_envido:
+            print("No se quiso el envido, se procede al truco")
+        if not se_canto_envido:
+            print("No se canto el envido, se procede al truco")
+            se_canto_envido = True
+
     def verificar_flor(self, j1, j2, canto_envido, tanteador):  
         
         ganador_flor = -1
@@ -73,6 +117,47 @@ class JugarTruco:
                 tanteador.sumar_puntos(1, canto_envido.puntos_flor())
                 ganador_flor = 1
         return ganador_flor
+
+    def jugar_truco(self, j1, j2, canto_truco, tanteador):
+        no_quiero_truco = False
+        se_canto_truco = False
+        
+        if j1.decidir_cantar_truco():
+            canto_truco.cantar(j1)
+            print("Jugador 1 canta Truco")
+            se_canto_truco = True
+
+            if not j2.aceptar_truco(j2.mano):
+                no_quiero_truco = True
+                canto_truco.rechazar(j2)
+                print("Jugador 2 no quiso")
+                print("Jugador 1 gana", canto_truco.puntos_por_rechazo())
+                tanteador.sumar_puntos(1, canto_truco.puntos_por_rechazo())
+                
+            else:
+                canto_truco.aceptar()
+                print("Jugador 2 quiso")
+
+        elif j2.decidir_cantar_truco():
+            canto_truco.cantar(j2)
+            print("Jugador 2 canta Truco")
+            se_canto_truco = True
+
+            if not j1.aceptar_truco(j1.mano):
+                no_quiero_truco = True
+                canto_truco.rechazar(j1)
+                print("Jugador 1 no quiso")
+                print("Jugador 2 gana", canto_truco.puntos_por_rechazo())
+                tanteador.sumar_puntos(2, canto_truco.puntos_por_rechazo())
+            
+            else:
+                canto_truco.aceptar()
+                print("Jugador 1 quiso")
+
+        if not no_quiero_truco:
+            self.jugar_carta_mano(j1, j2, tanteador, canto_truco)
+        else:
+            print("No se quiso el truco, se procede a mostrar el tanteador")
 
     def comparar_cartas(self, carta_j1, carta_j2):
         if valor_truco(carta_j1) > valor_truco(carta_j2):
@@ -164,3 +249,58 @@ class JugarTruco:
             print("Gana J1 la baza")
             print(f"Puntos en juego: {canto_truco.puntos_en_juego()}")
             tanteador.sumar_puntos(1, canto_truco.puntos_en_juego()) 
+
+    def mano_parda(self, j1, j2, carta1_j1, carta1_j2, tanteador, canto_truco):
+        
+        print(f"J2 juega carta 1: {carta1_j2}")
+        parda = True
+        print("Parda")
+        carta2_j1 = j1.jugar_carta()
+        print(f"J1 juega carta 2: {carta2_j1}")
+        carta2_j2 = j2.jugar_carta()
+        print(f"J2 juega carta 2: {carta2_j2}")
+        resultado_comparacion = self.comparar_cartas(carta2_j1, carta2_j2)
+        if resultado_comparacion == 1:
+            print(f"J1 juega carta 2: {carta2_j1} mata a {carta2_j2}")
+            print("Gana J1 la baza")
+            tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+        elif resultado_comparacion == 2:
+            print(f"J2 juega carta 2: {carta2_j2} mata a {carta2_j1}")
+            print("Gana J2 la baza")
+            tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
+        elif resultado_comparacion == 0:
+            print("2da Parda")
+            carta3_j1 = j1.jugar_carta()
+            print(f"J1 juega carta 3: {carta3_j1}")
+            carta3_j2 = j2.jugar_carta()
+            print(f"J2 juega carta 3: {carta3_j2}")
+            resultado_comparacion = self.comparar_cartas(carta3_j1, carta3_j2)
+            if resultado_comparacion == 1:
+                print(f"J1 juega carta 3: {carta3_j1} mata a {carta3_j2}")
+                print("Gana J1 la baza")
+                tanteador.sumar_puntos(1, canto_truco.puntos_en_juego())
+            elif resultado_comparacion == 2:
+                print(f"J2 juega carta 3: {carta3_j2} mata a {carta3_j1}")
+                print("Gana J2 la baza")
+                tanteador.sumar_puntos(2, canto_truco.puntos_en_juego())
+            else:    
+                print("3era parda, nadie gana la baza")
+
+    def jugar_carta_mano(self, j1, j2, tanteador, canto_truco):    
+        parda = False
+
+        carta1_j1 = j1.jugar_carta()
+        print(f"J1 juega carta 1: {carta1_j1}")
+        
+        carta1_j2 = j2.analizar_jugada(carta1_j1) 
+        resultado_comparacion = self.comparar_cartas(carta1_j1, carta1_j2)
+        # J2 hace primera
+        if resultado_comparacion == 2:
+            self.jugador2_hace_primera(j1, j2, carta1_j1, carta1_j2, tanteador, canto_truco)       
+        # J1 hace primera           
+        elif resultado_comparacion == 1:
+            self.jugador1_hace_primera(j1, j2, carta1_j1, carta1_j2, tanteador, canto_truco)
+        # Parda    
+        elif resultado_comparacion == 0:
+            self.mano_parda(j1, j2, carta1_j1, carta1_j2, tanteador, canto_truco)
+       

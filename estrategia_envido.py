@@ -59,7 +59,7 @@ class EnvidoAdaptativo(EstrategiaEnvido):
 
         for cartas in palos.values():
             if len(cartas) >= 3:
-                return True
+                return True      
         return False
    
     def calcular_envido(self, mano):
