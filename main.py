@@ -7,9 +7,11 @@ from reglas import valor_truco
 from reglas import valor_envido
 from truco import CantoTruco
 from envido import CantoEnvido
+from envido import JuegoEnvido
 from tanteador import Tanteador
 from estado_partido import EstadoPartido
 from partes_juego import JugarTruco
+from flor import JuegoFlor
 
 from carta import Carta
 
@@ -25,8 +27,9 @@ hay_flor = False
 parda = False
 ganador_flor = -1
 
+canto_truco = CantoTruco()
+canto_envido = CantoEnvido()
 tanteador = Tanteador()
-juego = JugarTruco()
 
 estado = EstadoPartido(
     tanteador.puntos_jugador(1),
@@ -35,6 +38,12 @@ estado = EstadoPartido(
 
 j1 = Jugador("Jugador 1", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), estado)
 j2 = Jugador("Jugador 2", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), estado)
+
+juego_truco = JugarTruco(j1, j2, canto_truco, tanteador)
+juego_flor = JuegoFlor()
+juego_envido = JuegoEnvido()
+
+
 
 # cartas_j1 = [Carta(1, "Espada"), Carta(4, "Espada"), Carta(11, "Espada")]
 # cartas_j2 = [Carta(10, "Oro"), Carta(3, "Basto"), Carta(5, "Basto")]
@@ -49,13 +58,11 @@ while not tanteador.ganador():
     j1.recibir_cartas(mazo.repartir(3))
     j2.recibir_cartas(mazo.repartir(3))
 
-    canto_truco = CantoTruco()
-    canto_envido = CantoEnvido()
 
     print(f"\nMano J1: {j1.mano}")
     print(f"Mano J2: {j2.mano}")
 
-    ganador_flor = juego.verificar_flor(j1, j2, canto_envido, tanteador)
+    ganador_flor = juego_flor.verificar_flor(j1, j2, canto_envido, tanteador)
     if ganador_flor == 1:
         flor_ganadora_1 = j1.mano[:]
     elif ganador_flor == 2:
@@ -65,10 +72,10 @@ while not tanteador.ganador():
         print("Ningún jugador tiene flor, se procede con el envido")
     
         if not se_canto_envido: 
-            juego.jugar_envido(j1, j2, canto_envido, tanteador)        
+            juego_envido.jugar_envido(j1, j2, canto_envido, tanteador)        
 
     if not se_canto_truco:
-        juego.jugar_truco(j1, j2, canto_truco, tanteador)
+        juego_truco.jugar_truco()
         
     if flor_ganadora_1 != []:
         print(f"Flor ganadora Jugador 1: {flor_ganadora_1}")
