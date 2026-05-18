@@ -98,6 +98,9 @@ class JugarTruco:
             return id_otro_jugador
         elif resultado == 2:
             print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
+            nueva_carta = jugador_actual.jugar_carta()
+            print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
+            return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, id_jugador_actual, nueva_carta, num_ronda + 1)
             if num_ronda < 3:
                 nueva_carta = otro_jugador.jugar_carta()
                 print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
