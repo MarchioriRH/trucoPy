@@ -54,6 +54,8 @@ class Jugador:
                 carta_elegida = carta
                 self.mano.remove(carta)
                 return carta_elegida
+        
+        print(f"Mano ordenada: {mano_ordenada}")
         carta_elegida = mano_ordenada[0]
         self.mano.remove(carta_elegida)        
         return carta_elegida  # Si no tiene carta más alta, juega la primera carta

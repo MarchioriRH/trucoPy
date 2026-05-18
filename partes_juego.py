@@ -67,141 +67,78 @@ class JugarTruco:
         else:
             return 0
 
-    # def jugador2_hace_primera(self, self.j1, self.j2, carta1_self.j1, carta1_self.j2, self.tanteador, self.canto_truco):
-    #     global self.j1_hizo_primera
+    def determinar_ganador_mano(self, jugador_actual, otro_jugador, id_jugador_actual, id_otro_jugador, 
+                               carta_en_juego, num_ronda=1):
+        """
+        Método recursivo que determina el ganador de una mano.
+        El flujo es: quien no mata pierde, quien mata juega otra.
         
-    #     print(f"self.j2 juega carta 1: {carta1_self.j2} mata a {carta1_self.j1}")
-    #     self.j2_hizo_primera = True
-    #     carta2_self.j2 = self.j2.jugar_carta()
-    #     # Juega la segunda carta
-    #     print(f"self.j2 juega carta 2: {carta2_self.j2}")
-
-    #     # self.j1 analiza la carta jugada por self.j2 y elige la carta a jugar
-    #     carta2_self.j1 = self.j1.analizar_jugada(carta2_self.j2)
-    #     # Si la carta de self.j1 mata a la carta de self.j2
-    #     valor_comparacion = self.comparar_cartas(carta2_self.j1, carta2_self.j2)
-    #     if valor_comparacion == 1:
-    #         print(f"self.j1 juega carta 2: {carta2_self.j1} mata a {carta2_self.j2}")
-    #         # self.j1 juega la tercera carta
-    #         carta3_self.j1 = self.j1.jugar_carta()
-    #         print(f"self.j1 juega carta 3: {carta3_self.j1}")
-
-    #         # self.j2 analiza la carta jugada por self.j1 y elige la carta a jugar
-    #         carta3_self.j2 = self.j2.analizar_jugada(carta3_self.j1)
-    #         # Si la carta de self.j2 mata a la carta de self.j1
-    #         resultado_comparacion = self.comparar_cartas(carta3_self.j1, carta3_self.j2)
-    #         if resultado_comparacion == 2:                
-    #             self.jugador_mata_carta(carta3_self.j2, carta3_self.j1, self.canto_truco, self.tanteador, 2)
-    #         elif resultado_comparacion == 1:               
-    #             self.jugador_mata_carta(carta3_self.j1, carta3_self.j2, self.canto_truco, self.tanteador, 1)
-    #         else:               
-    #             self.jugador_gana_por_primera(carta3_self.j1, carta3_self.j2, self.canto_truco, self.tanteador, 2)  
-    #     else:
-    #         self.jugador_no_mata_carta(carta2_self.j1, carta2_self.j2, self.canto_truco, self.tanteador, 1)
-
-    def jugador_mata_carta(self, carta_ganadora, carta_perdedora, jugador):
-        print(f"Jugador {jugador} juega carta 3: {carta_ganadora} mata a {carta_perdedora}")
-        print(f"Gana jugador {jugador} la baza")
-        print(f"Puntos en juego: {self.canto_truco.puntos_en_juego()}")
-        self.tanteador.sumar_puntos(jugador, self.canto_truco.puntos_en_juego())
-
-    def jugador_no_mata_carta(self, carta_ganadora, carta_perdedora, jugador):
-        print(f"Jugador {jugador} no mata a {carta_perdedora}")
-        print(f"Gana jugador {jugador} la baza")
-        print(f"Puntos en juego: {self.canto_truco.puntos_en_juego()}")
-        self.tanteador.sumar_puntos(jugador, self.canto_truco.puntos_en_juego())
-
-    def jugador_gana_por_primera(self, carta_ganadora, carta_perdedora, jugador):
-        print(f"Gana jugador {jugador} por primera")
-        print(f"Puntos en juego: {self.canto_truco.puntos_en_juego()}")
-        self.tanteador.sumar_puntos(jugador, self.canto_truco.puntos_en_juego())
-
-    # Ver como hacer para que no se mezclen las juagadas
-    def jugador_hace_primera(self, jugador, ganador, perdedor, carta_ganadora, carta_perdedora):
+        Args:
+            jugador_actual: Jugador que debe responder
+            otro_jugador: Jugador que jugó la carta anterior
+            id_jugador_actual: ID del jugador actual (1 o 2)
+            id_otro_jugador: ID del otro jugador (1 o 2)
+            carta_en_juego: Carta que debe responder
+            num_ronda: Número de ronda (1-3)
         
-        # global self.j2_hizo_primera
-        #print(f"Jugador {jugador} juega carta 1: {carta_ganadora}")
-
-        print(f"{perdedor.nombre} juega carta 1: {carta_perdedora} no mata a {carta_ganadora}")
-
-        carta2_ganador = ganador.analizar_jugada(carta_perdedora)
-        # self.j1_hizo_primera = True
-        print(f"{ganador.nombre} juega carta 2: {carta2_ganador}")
-
-        carta2_perdedor = perdedor.analizar_jugada(carta2_ganador)
-        resultado_comparacion = self.comparar_cartas(carta2_ganador, carta2_perdedor)
+        Returns:
+            ID del jugador que ganó la mano
+        """
+        if num_ronda > 3:
+            return id_otro_jugador
         
-        if resultado_comparacion == 2:
-            print(f"{perdedor.nombre} juega carta 2: {carta2_perdedor} mata a {carta2_ganador}")
-            carta3_perdedor = perdedor.jugar_carta()
-            print(f"{perdedor.nombre} juega carta 3: {carta3_perdedor}")
-
-            carta3_ganador = ganador.jugar_carta()
-            print(f"{ganador.nombre} juega carta 3: {carta3_ganador}")
-
-            resultado_comparacion = self.comparar_cartas(carta3_ganador, carta3_perdedor)
-            if resultado_comparacion == 1:
-                self.jugador_mata_carta(carta3_perdedor, carta3_ganador, 1)
-            elif resultado_comparacion == 2:
-                self.jugador_mata_carta(carta3_ganador, carta3_perdedor, 2)
-            else:
-                self.jugador_gana_por_primera(carta3_ganador, carta3_perdedor, 1)
+        print(f"\nRonda {num_ronda}: Jugador {id_jugador_actual} debe responder a {carta_en_juego}")
+        carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
+        print(f"Jugador {id_jugador_actual} juega: {carta_respuesta}")
+        
+        resultado = self.comparar_cartas(carta_en_juego, carta_respuesta)
+        
+        if resultado == 1:
+            print(f"Jugador {id_jugador_actual} no mata")
+            return id_otro_jugador
+        elif resultado == 2:
+            print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
+            if num_ronda < 3:
+                nueva_carta = otro_jugador.jugar_carta()
+                print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
+            return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                               id_jugador_actual, carta_respuesta, num_ronda + 1)
         else:
-            self.jugador_no_mata_carta(carta2_perdedor, carta2_ganador, 2)
+            print(f"Parda en ronda {num_ronda}")
+            if num_ronda < 3:
+                nueva_carta = jugador_actual.jugar_carta()
+                print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
+            return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                               id_jugador_actual, carta_respuesta, num_ronda + 1)
 
-    # def mano_parda(self, self.j1, self.j2, carta1_j1, carta1_.j2):
-        
-    #     print(f"J2 juega carta 1: {carta1_j2}")
-    #     parda = True
-    #     print("Parda")
-    #     carta2_self.j1 = self.j1.jugar_carta()
-    #     print(f"self.j1 juega carta 2: {carta2_self.j1}")
-    #     carta2_self.j2 = self.j2.jugar_carta()
-    #     print(f"self.j2 juega carta 2: {carta2_self.j2}")
-    #     resultado_comparacion = self.comparar_cartas(carta2_self.j1, carta2_self.j2)
-    #     if resultado_comparacion == 1:
-    #         print(f"self.j1 juega carta 2: {carta2_self.j1} mata a {carta2_self.j2}")
-    #         print("Gana self.j1 la baza")
-    #         self.tanteador.sumar_puntos(1, self.canto_truco.puntos_en_juego())
-    #     elif resultado_comparacion == 2:
-    #         print(f"self.j2 juega carta 2: {carta2_self.j2} mata a {carta2_self.j1}")
-    #         print("Gana self.j2 la baza")
-    #         self.tanteador.sumar_puntos(2, self.canto_truco.puntos_en_juego())
-    #     elif resultado_comparacion == 0:
-    #         print("2da Parda")
-    #         carta3_self.j1 = self.j1.jugar_carta()
-    #         print(f"self.j1 juega carta 3: {carta3_self.j1}")
-    #         carta3_self.j2 = self.j2.jugar_carta()
-    #         print(f"self.j2 juega carta 3: {carta3_self.j2}")
-    #         resultado_comparacion = self.comparar_cartas(carta3_self.j1, carta3_self.j2)
-    #         if resultado_comparacion == 1:
-    #             print(f"self.j1 juega carta 3: {carta3_self.j1} mata a {carta3_self.j2}")
-    #             print("Gana self.j1 la baza")
-    #             self.tanteador.sumar_puntos(1, self.canto_truco.puntos_en_juego())
-    #         elif resultado_comparacion == 2:
-    #             print(f"self.j2 juega carta 3: {carta3_self.j2} mata a {carta3_self.j1}")
-    #             print("Gana self.j2 la baza")
-    #             self.tanteador.sumar_puntos(2, self.canto_truco.puntos_en_juego())
-    #         else:    
-    #             print("3era parda, nadie gana la baza")
+    def adjudicar_ganador_mano(self, id_ganador):
+        """Suma los puntos al ganador de la mano"""
+        puntos = self.canto_truco.puntos_en_juego()
+        print(f"\n>>> Gana Jugador {id_ganador} la mano")
+        print(f">>> Puntos en juego: {puntos}\n")
+        self.tanteador.sumar_puntos(id_ganador, puntos)
 
-    def jugar_carta_mano(self):    
-        parda = False
-
+    def jugar_carta_mano(self):
         carta1_j1 = self.j1.jugar_carta()
-        print(f"Jugador 1 juega carta 1: {carta1_self.j1}")
+        print(f"Jugador 1 juega carta 1: {carta1_j1}")
         
-        carta1_j2 = self.j2.analizar_jugada(carta1_j1) 
-        resultado_comparacion = self.comparar_cartas(carta1_j1, carta1_j2)
-        print(f"Resultado comparación carta 1: {resultado_comparacion} (1: j1 gana, 2: j2 gana, 0: Parda)")
-        # self.j2 hace primera
+        carta1_j2 = self.j2.analizar_jugada(carta1_j1)
+        resultado_inicial = self.comparar_cartas(carta1_j1, carta1_j2)
+        print(f"Jugador 2 juega: {carta1_j2}")
+        print(f"Resultado: {resultado_inicial} (1: J1 gana, 2: J2 gana, 0: Parda)\n")
         
-        if resultado_comparacion == 2:
-            self.jugador_hace_primera(2, self.j2, self.j1, carta1_j2, carta1_j1)       
-        # self.j1 hace primera           
-        elif resultado_comparacion == 1:
-            self.jugador_hace_primera(1, self.j1, self.j2, carta1_j1, carta1_j2)
-        # Parda    
-        elif resultado_comparacion == 0:
-            self.mano_parda(self.j1, self.j2, carta1_j1, carta1_j2)
-       
+        if resultado_inicial == 2:
+            print(f"Jugador 2 mata")
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, carta1_j2, 2)
+        elif resultado_inicial == 1:
+            print(f"Jugador 2 no mata")
+            nueva_carta = self.j1.jugar_carta()
+            print(f"Jugador 1 juega: {nueva_carta}")
+            id_ganador = self.determinar_ganador_mano(self.j2, self.j1, 2, 1, nueva_carta, 2)
+        else:
+            print("Parda en ronda 1")
+            nueva_carta = self.j2.jugar_carta()
+            print(f"Jugador 2 juega: {nueva_carta}")
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 2)
+        
+        self.adjudicar_ganador_mano(id_ganador)
