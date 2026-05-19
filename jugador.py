@@ -49,15 +49,16 @@ class Jugador:
 
     def analizar_jugada(self, carta_jugada):
         mano_ordenada = sorted(self.mano, key=valor_truco)
+        # print(f"Mano ordenada principio: {mano_ordenada}")
         for carta in mano_ordenada:
             if valor_truco(carta) > valor_truco(carta_jugada):
                 carta_elegida = carta
                 self.mano.remove(carta)
                 return carta_elegida
         
-        print(f"Mano ordenada: {mano_ordenada}")
         carta_elegida = mano_ordenada[0]
         self.mano.remove(carta_elegida)        
+        # print(f"Mano ordenada final: {mano_ordenada}")
         return carta_elegida  # Si no tiene carta más alta, juega la primera carta
 
     

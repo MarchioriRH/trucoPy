@@ -84,10 +84,10 @@ class JugarTruco:
         Returns:
             ID del jugador que ganó la mano
         """
-        if num_ronda > 3:
+        if len(jugador_actual.mano) == 0:
             return id_otro_jugador
         
-        print(f"\nRonda {num_ronda}: Jugador {id_jugador_actual} debe responder a {carta_en_juego}")
+        # print(f"\nRonda {num_ronda}: Jugador {id_jugador_actual} debe responder a {carta_en_juego}")
         carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
         print(f"Jugador {id_jugador_actual} juega: {carta_respuesta}")
         
@@ -100,15 +100,16 @@ class JugarTruco:
             print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
             nueva_carta = jugador_actual.jugar_carta()
             print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
-            return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, id_jugador_actual, nueva_carta, num_ronda + 1)
+            # return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, id_jugador_actual, nueva_carta, num_ronda + 1)
             if num_ronda < 3:
                 nueva_carta = otro_jugador.jugar_carta()
                 print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
+                carta_respuesta = nueva_carta
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
                                                id_jugador_actual, carta_respuesta, num_ronda + 1)
         else:
             print(f"Parda en ronda {num_ronda}")
-            if num_ronda < 3:
+            if len(jugador_actual.mano) < 0:
                 nueva_carta = jugador_actual.jugar_carta()
                 print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
@@ -123,25 +124,27 @@ class JugarTruco:
 
     def jugar_carta_mano(self):
         carta1_j1 = self.j1.jugar_carta()
-        print(f"Jugador 1 juega carta 1: {carta1_j1}")
+        print(f"Jugador 1 juega: {carta1_j1}")
         
         carta1_j2 = self.j2.analizar_jugada(carta1_j1)
         resultado_inicial = self.comparar_cartas(carta1_j1, carta1_j2)
         print(f"Jugador 2 juega: {carta1_j2}")
-        print(f"Resultado: {resultado_inicial} (1: J1 gana, 2: J2 gana, 0: Parda)\n")
+        # print(f"Resultado: {resultado_inicial} (1: J1 gana, 2: J2 gana, 0: Parda)\n")
         
         if resultado_inicial == 2:
             print(f"Jugador 2 mata")
-            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, carta1_j2, 2)
+            carta2_j2 = self.j2.jugar_carta()
+            print(f"Jugador 2 juega: {carta2_j2}")
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, carta2_j2, 1)
         elif resultado_inicial == 1:
             print(f"Jugador 2 no mata")
             nueva_carta = self.j1.jugar_carta()
             print(f"Jugador 1 juega: {nueva_carta}")
-            id_ganador = self.determinar_ganador_mano(self.j2, self.j1, 2, 1, nueva_carta, 2)
+            id_ganador = self.determinar_ganador_mano(self.j2, self.j1, 2, 1, nueva_carta, 1)
         else:
             print("Parda en ronda 1")
             nueva_carta = self.j2.jugar_carta()
             print(f"Jugador 2 juega: {nueva_carta}")
-            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 2)
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 1)
         
         self.adjudicar_ganador_mano(id_ganador)
