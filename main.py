@@ -5,7 +5,7 @@ from estrategia_envido import EnvidoAgresivo, EnvidoConservador, EnvidoAdaptativ
 from jugador import Jugador
 from reglas import valor_truco
 from reglas import valor_envido
-from truco import CantoTruco
+from truco import CantoTruco, JuegoTruco
 from envido import CantoEnvido
 from envido import JuegoEnvido
 from tanteador import Tanteador
@@ -39,9 +39,9 @@ estado = EstadoPartido(
 j1 = Jugador("Jugador 1", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), estado)
 j2 = Jugador("Jugador 2", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), estado)
 
-juego_truco = JugarTruco(j1, j2, canto_truco, tanteador)
-juego_flor = JuegoFlor()
-juego_envido = JuegoEnvido()
+juego_truco = JuegoTruco(j1, j2, canto_truco, tanteador)
+juego_flor = JuegoFlor(j1, j2, canto_envido, tanteador)
+juego_envido = JuegoEnvido(j1, j2, canto_envido, tanteador)
 
 
 
@@ -62,7 +62,7 @@ while not tanteador.ganador():
     print(f"\nMano J1: {j1.mano}")
     print(f"Mano J2: {j2.mano}")
 
-    ganador_flor = juego_flor.verificar_flor(j1, j2, canto_envido, tanteador)
+    ganador_flor = juego_flor.verificar_flor()
     if ganador_flor == 1:
         flor_ganadora_1 = j1.mano[:]
     elif ganador_flor == 2:
@@ -72,7 +72,7 @@ while not tanteador.ganador():
         print("Ningún jugador tiene flor, se procede con el envido")
     
         if not se_canto_envido: 
-            juego_envido.jugar_envido(j1, j2, canto_envido, tanteador)        
+            juego_envido.jugar_envido()        
 
     if not se_canto_truco:
         juego_truco.jugar_truco()

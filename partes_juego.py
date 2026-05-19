@@ -16,6 +16,10 @@ class JugarTruco:
         self.canto_truco = canto_truco
     
     def jugar_truco(self):
+        """
+        Lógica para jugar una mano de truco, incluyendo el canto de truco 
+        y la comparación de cartas.
+        """
         no_quiero_truco = False
         se_canto_truco = False
         
@@ -60,6 +64,13 @@ class JugarTruco:
         self.tanteador.sumar_puntos(3 - jugador, self.canto_truco.puntos_por_rechazo())
 
     def comparar_cartas(self, carta_j1, carta_j2):
+        """
+        Compara dos cartas y determina cuál es mayor.
+        Retorna:
+            1 si carta_j1 es mayor
+            2 si carta_j2 es mayor
+            0 si son iguales (parda)
+        """        
         if valor_truco(carta_j1) > valor_truco(carta_j2):
             return 1
         elif valor_truco(carta_j2) > valor_truco(carta_j1):
@@ -86,22 +97,20 @@ class JugarTruco:
         """
         if len(jugador_actual.mano) == 0:
             return id_otro_jugador
-        
-        # print(f"\nRonda {num_ronda}: Jugador {id_jugador_actual} debe responder a {carta_en_juego}")
+
         carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
         print(f"Jugador {id_jugador_actual} juega: {carta_respuesta}")
         
         resultado = self.comparar_cartas(carta_en_juego, carta_respuesta)
         
-        if resultado == 1:
+        if resultado == 1: # quien jugó la carta anterior no mata
             print(f"Jugador {id_jugador_actual} no mata")
             return id_otro_jugador
-        elif resultado == 2:
+        elif resultado == 2: # quien jugó la carta anterior mata
             print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
             nueva_carta = jugador_actual.jugar_carta()
             print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
-            # return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, id_jugador_actual, nueva_carta, num_ronda + 1)
-            if num_ronda < 3:
+            if len(otro_jugador.mano) > 0: # Si no es la última ronda, el otro jugador debe responder
                 nueva_carta = otro_jugador.jugar_carta()
                 print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
                 carta_respuesta = nueva_carta
@@ -129,13 +138,12 @@ class JugarTruco:
         carta1_j2 = self.j2.analizar_jugada(carta1_j1)
         resultado_inicial = self.comparar_cartas(carta1_j1, carta1_j2)
         print(f"Jugador 2 juega: {carta1_j2}")
-        # print(f"Resultado: {resultado_inicial} (1: J1 gana, 2: J2 gana, 0: Parda)\n")
         
         if resultado_inicial == 2:
             print(f"Jugador 2 mata")
-            carta2_j2 = self.j2.jugar_carta()
-            print(f"Jugador 2 juega: {carta2_j2}")
-            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, carta2_j2, 1)
+            nueva_carta = self.j2.jugar_carta()
+            print(f"Jugador 2 juega: {nueva_carta}")
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 1)
         elif resultado_inicial == 1:
             print(f"Jugador 2 no mata")
             nueva_carta = self.j1.jugar_carta()
