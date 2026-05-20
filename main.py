@@ -10,7 +10,7 @@ from envido import CantoEnvido
 from envido import JuegoEnvido
 from tanteador import Tanteador
 from estado_partido import EstadoPartido
-from partes_juego import JugarTruco
+# from partes_juego import JugarTruco
 from flor import JuegoFlor
 
 from carta import Carta

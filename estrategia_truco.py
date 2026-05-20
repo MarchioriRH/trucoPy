@@ -48,3 +48,55 @@ class TrucoAdaptativo(EstrategiaTruco):
             return False  # no regalo puntos
 
         return valor_truco(mejor) > 6
+
+    def decidir_cantar_retruco(self, mano, estado):
+        mejor = max(mano, key=valor_truco)
+        ventaja = estado.puntos_j1 - estado.puntos_j2
+
+        if ventaja < -5:
+            return valor_truco(mejor) > 7
+
+        if ventaja > 5:
+            return valor_truco(mejor) > 12
+
+        return valor_truco(mejor) > 9
+
+    def aceptar_retruco(self, mano, nivel, estado):
+        mejor = max(mano, key=valor_truco)
+        riesgo = nivel
+
+        ventaja = estado.puntos_j1 - estado.puntos_j2
+
+        if ventaja < -5:
+            return True  # necesito remontar
+
+        if ventaja > 8 and riesgo >= 3:
+            return False  # no regalo puntos
+
+        return valor_truco(mejor) > 6
+
+    def decidir_cantar_vale_cuatro(self, mano, estado):
+        mejor = max(mano, key=valor_truco)
+        ventaja = estado.puntos_j1 - estado.puntos_j2
+
+        if ventaja < -5:
+            return valor_truco(mejor) > 7
+
+        if ventaja > 5:
+            return valor_truco(mejor) > 12
+
+        return valor_truco(mejor) > 9
+
+    def aceptar_vale_cuatro(self, mano, nivel, estado):
+        mejor = max(mano, key=valor_truco)
+        riesgo = nivel
+
+        ventaja = estado.puntos_j1 - estado.puntos_j2
+
+        if ventaja < -5:
+            return True  # necesito remontar
+
+        if ventaja > 8 and riesgo >= 3:
+            return False  # no regalo puntos
+
+        return valor_truco(mejor) > 6

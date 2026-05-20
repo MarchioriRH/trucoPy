@@ -36,6 +36,12 @@ class Jugador:
 
     def aceptar_truco(self, nivel):
         return self.estrategia_truco.aceptar(self.mano, nivel, self.estado)
+
+    def decidir_cantar_retruco(self):
+        return self.estrategia_truco.decidir_cantar_retruco(self.mano, self.estado)
+
+    def aceptar_retruco(self, nivel):
+        return self.estrategia_truco.aceptar_retruco(self.mano, nivel, self.estado)
     
     def mostrar_mano(self):
         for i, carta in enumerate(self.mano):

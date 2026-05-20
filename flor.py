@@ -5,7 +5,7 @@ from truco import CantoTruco
 from envido import CantoEnvido
 from tanteador import Tanteador
 from estado_partido import EstadoPartido
-from partes_juego import JugarTruco
+# from partes_juego import JugarTruco
 from carta import Carta
 
 class JuegoFlor:
