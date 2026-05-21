@@ -77,7 +77,7 @@ class JuegoTruco:
                 no_quiero_truco = True
                 self.jugador_no_quiso_truco(2)                
             else:
-                self.jugador_quiso_truco(1)
+                no_quiero_truco = self.jugador_quiso_truco(1)
                 
         elif self.j2.decidir_cantar_truco():
             self.jugador_canta_truco(2)
@@ -88,11 +88,11 @@ class JuegoTruco:
                 self.jugador_no_quiso_truco(1)
             
             else:
-                self.jugador_quiso_truco(2)
+                no_quiero_truco = self.jugador_quiso_truco(2)
 
         if not no_quiero_truco:
             self.jugar_carta_mano()
-        else:
+        else:        
             print("No se quiso el truco, se procede a mostrar el tanteador")
 
     def jugador_canta_truco(self, jugador):
@@ -100,21 +100,51 @@ class JuegoTruco:
         print(f"Jugador {jugador} canta Truco")
 
     def jugador_quiso_truco(self, jugador):
-        if jugador == 1:
-            jugador = self.j1
-        else:
-            jugador = self.j2
-        print(f"Canto_turco.aceptar: {self.canto_truco.aceptar()}")
-        self.canto_truco.aceptar()    
-        print(f"Jugador {jugador.nombre} piensa si canta Retruco o Vale Cuatro...")    
+        jugador = self.j1 if jugador == 1 else self.j2
+        otro_jugador = self.j2 if jugador == self.j1 else self.j1
+        no_quiero = False
+
+        # self.canto_truco.aceptar()    
+        print(f"Jugador {jugador.nombre} piensa si canta Retruco...")    
+        
         if jugador.decidir_cantar_retruco():
             self.canto_truco.cantar_retruco(jugador)
             print(f"Jugador {jugador.nombre} canta Retruco")
-        elif jugador.decidir_cantar_vale_cuatro():
-            self.canto_truco.cantar_vale_cuatro(jugador)
-            print(f"Jugador {jugador.nombre} canta Vale Cuatro")
+
+            if not otro_jugador.aceptar_retruco(otro_jugador.mano):
+                self.canto_truco.rechazar(otro_jugador)
+                no_quiero = True
+                print(f"Jugador {otro_jugador.nombre} no quiso el Retruco")
+                print(f"Jugador {jugador.nombre} gana", self.canto_truco.puntos_por_rechazo())
+                self.tanteador.sumar_puntos(1 if jugador == self.j1 else 2, self.canto_truco.puntos_por_rechazo())
+
+                if otro_jugador.decidir_cantar_vale_cuatro():
+                    self.canto_truco.cantar_vale_cuatro(otro_jugador)
+                    print(f"Jugador {otro_jugador.nombre} canta Vale Cuatro")                    
+
+                    if jugador.aceptar_vale_cuatro(jugador.mano):
+                        self.canto_truco.aceptar()    
+                        print(f"Jugador {jugador.nombre} quiso el Vale Cuatro")
+                    else:
+                        no_quiero = True
+                        self.canto_truco.rechazar(jugador)
+                        print(f"Jugador {jugador.nombre} no quiso el Vale Cuatro")
+                        print(f"Jugador {otro_jugador.nombre} gana", self.canto_truco.puntos_por_rechazo())
+                        self.tanteador.sumar_puntos(1 if jugador == self.j1 else 2, self.canto_truco.puntos_por_rechazo())
+                else:
+                    self.canto_truco.aceptar()
+                    print(f"Jugador {otro_jugador.nombre} quiso el retruco")  
+            else:
+                no_quiero = False
+                self.canto_truco.rechazar(jugador)
+                print(f"Jugador {jugador.nombre} no quiso el Retruco")
+                print(f"Jugador {otro_jugador.nombre} gana", self.canto_truco.puntos_por_rechazo())
+                self.tanteador.sumar_puntos(1 if jugador == self.j1 else 2, self.canto_truco.puntos_por_rechazo())               
         else:
-            print(f"Jugador {jugador.nombre} quiso")
+            self.canto_truco.aceptar()
+            print(f"Jugador {jugador.nombre} quiso el truco")
+
+        return no_quiero
 
     def jugador_no_quiso_truco(self, jugador):
         self.canto_truco.rechazar(jugador)

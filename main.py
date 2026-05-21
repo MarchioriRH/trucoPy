@@ -4,7 +4,6 @@ from estrategia_truco import TrucoAgresivo, TrucoConservador, TrucoAdaptativo
 from estrategia_envido import EnvidoAgresivo, EnvidoConservador, EnvidoAdaptativo
 from jugador import Jugador
 from reglas import valor_truco
-from reglas import valor_envido
 from truco import CantoTruco, JuegoTruco
 from envido import CantoEnvido
 from envido import JuegoEnvido

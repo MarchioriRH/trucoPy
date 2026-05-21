@@ -1,4 +1,4 @@
-from reglas import valor_truco, valor_envido
+from reglas import valor_truco
 import random
 
 class EstrategiaCartas:

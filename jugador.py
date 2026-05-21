@@ -1,4 +1,4 @@
-from reglas import valor_truco, valor_envido
+from reglas import valor_truco
 
 class Jugador:
     def __init__(self, nombre, estrategia_cartas, estrategia_truco, estrategia_envido, estado):
@@ -42,6 +42,12 @@ class Jugador:
 
     def aceptar_retruco(self, nivel):
         return self.estrategia_truco.aceptar_retruco(self.mano, nivel, self.estado)
+
+    def decidir_cantar_vale_cuatro(self):
+        return self.estrategia_truco.decidir_cantar_vale_cuatro(self.mano, self.estado)
+
+    def aceptar_vale_cuatro(self, nivel):
+        return self.estrategia_truco.aceptar_vale_cuatro(self.mano, nivel, self.estado)
     
     def mostrar_mano(self):
         for i, carta in enumerate(self.mano):

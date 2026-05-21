@@ -1,6 +1,5 @@
 from jugador import Jugador
 from reglas import valor_truco
-from reglas import valor_envido
 from truco import CantoTruco
 from envido import CantoEnvido
 from tanteador import Tanteador
