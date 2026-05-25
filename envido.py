@@ -12,8 +12,8 @@ class CantoEnvido:
     def cantar(self, jugador):
         if not self.puede_cantar():
             return False
-
-        self.nivel += 1
+        print(f"Nivel envido: {self.nivel}, puntos en juego: {self.puntos_en_juego()}")
+        self.nivel = self.nivel + 1
         self.ultimo_cantor = jugador
         self.activo = True
         return True
@@ -81,7 +81,7 @@ class JuegoEnvido:
                 self.jugador_no_quiso_envido(2)
                                 
             else:
-                self.jugador_quiso_envido(1)
+                self.jugador_quiso_envido(2)
                
         elif self.j2.decidir_cantar_envido():
             self.jugador_canto_envido(2)
@@ -92,7 +92,7 @@ class JuegoEnvido:
                 self.jugador_no_quiso_envido(1)
                                
             else:
-                self.jugador_quiso_envido(2)
+                self.jugador_quiso_envido(1)
                
         if no_quiero_envido:
             print("No se quiso el envido, se procede al truco")
@@ -101,7 +101,7 @@ class JuegoEnvido:
             se_canto_envido = True
 
     def jugador_canto_envido(self, jugador):
-        self.canto_envido.cantar(self.j2)
+        self.canto_envido.cantar(jugador)
         print(f"Jugador {jugador} canta Envido")
     
     def jugador_quiso_envido(self, jugador):
