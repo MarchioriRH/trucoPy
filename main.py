@@ -44,11 +44,12 @@ juego_envido = JuegoEnvido(j1, j2, canto_envido, tanteador)
 
 
 
-# cartas_j1 = [Carta(1, "Espada"), Carta(4, "Espada"), Carta(11, "Espada")]
-# cartas_j2 = [Carta(10, "Oro"), Carta(3, "Basto"), Carta(5, "Basto")]
+# cartas_j1 = [Carta(1, "Espada"), Carta(6, "Espada"), Carta(2, "Espada")]
+# cartas_j2 = [Carta(5, "Oro"), Carta(6, "Basto"), Carta(2, "Basto")]
 
 # j1.mano = cartas_j1
 # j2.mano = cartas_j2
+
 while not tanteador.ganador():
     flor_ganadora_1 = []
     flor_ganadora_2 = []
