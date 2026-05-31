@@ -76,9 +76,9 @@ class JuegoTruco:
 
             if not self.j2.aceptar_truco(self.j2.mano):
                 no_quiero_truco = True
-                self.jugador_no_quiso_truco(2, 1, 1)                
+                self.jugador_no_quiso_truco(1, 2, 1)                
             else:
-                print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+                # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
                 no_quiero_truco = self.jugador_quiso_truco(2)
                 
         elif self.j2.decidir_cantar_truco():
@@ -88,9 +88,9 @@ class JuegoTruco:
 
             if not self.j1.aceptar_truco(self.j1.mano):
                 no_quiero_truco = True
-                self.jugador_no_quiso_truco(1, 2, 1)            
+                self.jugador_no_quiso_truco(2, 1, 1)            
             else:
-                print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+                # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
                 no_quiero_truco = self.jugador_quiso_truco(1)
 
         elif not se_canto_truco:
@@ -99,14 +99,14 @@ class JuegoTruco:
             self.jugar_carta_mano(se_canto_truco)
 
         if not no_quiero_truco:
-            print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+            # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
             self.jugar_carta_mano(se_canto_truco)
         else:        
             print("No se quiso el truco, se procede a mostrar el tanteador")
 
     def jugador_canta_truco(self, jugador):
         self.canto_truco.cantar(jugador)
-        print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+        # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
         print(f"Jugador {jugador} canta Truco")
 
     def jugador_quiso_truco(self, jugador):
@@ -118,24 +118,24 @@ class JuegoTruco:
         
         if jugador.decidir_cantar_retruco():
             self.canto_truco.cantar_retruco(jugador)
-            print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+            # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
             print(f"Jugador {jugador.nombre} canta Retruco")
             self.canto_truco.nivel_truco = 3
 
             if otro_jugador.aceptar_retruco(otro_jugador.mano):
                 self.canto_truco.aceptar()
-                print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+                # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
                 print(f"Jugador {otro_jugador.nombre} quiso el Retruco")
 
                 if otro_jugador.decidir_cantar_vale_cuatro():
                     self.canto_truco.cantar_vale_cuatro(otro_jugador)
-                    print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+                    # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
                     print(f"Jugador {otro_jugador.nombre} canta Vale Cuatro")                    
                     self.canto_truco.nivel_truco = 4
 
                     if jugador.aceptar_vale_cuatro(jugador.mano):
                         self.canto_truco.aceptar()    
-                        print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
+                        # print(f"nivel_truco: {self.canto_truco.nivel_truco}, puntos en juego: {self.canto_truco.puntos_en_juego()}")
                         print(f"Jugador {jugador.nombre} quiso el Vale Cuatro")
                     else:
                         no_quiero = True
@@ -152,10 +152,10 @@ class JuegoTruco:
 
         return no_quiero
 
-    def jugador_no_quiso_truco(self, ganador, perdedor, nivel_truco_truco):
-        parte_truco = "Truco" if self.canto_truco.nivel_truco == 1 else "Retruco" if self.canto_truco.nivel_truco == 2 else "Vale Cuatro"
+    def jugador_no_quiso_truco(self, ganador, perdedor, nivel_truco):
+        parte_truco = "Truco" if self.canto_truco.nivel_truco == 2 else "Retruco" if self.canto_truco.nivel_truco == 3 else "Vale Cuatro"
         self.canto_truco.rechazar(perdedor)
-        puntos = 1 if self.canto_truco.nivel_truco == 1 else 2 if self.canto_truco.nivel_truco == 2 else 3
+        puntos = 1 if self.canto_truco.nivel_truco == 2 else 2 if self.canto_truco.nivel_truco == 3 else 3
         print(f"Jugador {perdedor} no quiso el {parte_truco}")
         print(f"Jugador {ganador} gana {puntos} puntos por el rechazo del {parte_truco}")
         self.tanteador.sumar_puntos(ganador, puntos)
@@ -176,7 +176,7 @@ class JuegoTruco:
             return 0
 
     def determinar_ganador_mano(self, jugador_actual, otro_jugador, id_jugador_actual, id_otro_jugador, 
-                               carta_en_juego, num_ronda=1):
+                               carta_en_juego, carta_jugada, primera, num_ronda=1):
         """
         Método recursivo que determina el ganador de una mano.
         El flujo es: quien no mata pierde, quien mata juega otra.
@@ -192,34 +192,56 @@ class JuegoTruco:
         Returns:
             ID del jugador que ganó la mano
         """
-        if len(jugador_actual.mano) == 0:
+        carta_jugada = carta_en_juego if num_ronda == 1 else carta_jugada
+        
+        print(f"Jugador actual: {id_jugador_actual}, carta en juego: {carta_en_juego}, carta_jugada: {carta_jugada}, ronda: {num_ronda}")
+        if (len(jugador_actual.mano) == 0 and len(otro_jugador.mano) == 0 and num_ronda == 3) or (len(jugador_actual.mano) == 0 and num_ronda > 1):
+            resutado = self.comparar_cartas(carta_en_juego, carta_jugada)  # Comparamos la última carta con sí misma para determinar si es parda
+            if resutado == 0:  # Si es parda, gana el que hizo la primera jugada
+                if primera == 1:
+                    print("Parda en la última ronda, gana J1 por ser mano")
+                    return 1
+                elif primera == 2:
+                    print("Parda en la última ronda, gana J2 por ser mano")
+                    return 2
             return id_otro_jugador
+        # else:
+        #     return id_otro_jugador
 
+        print(f"Length mano jugador actual {id_jugador_actual}: {len(jugador_actual.mano)}, primera: {primera}")
+        print(f"Length mano otro jugador {id_otro_jugador}: {len(otro_jugador.mano)}")
         carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
         print(f"Jugador {id_jugador_actual} juega: {carta_respuesta}")
         
         resultado = self.comparar_cartas(carta_en_juego, carta_respuesta)
+        print(f"Comparando {carta_en_juego} vs {carta_respuesta}, resultado: {resultado}")
         
         if resultado == 1: # quien jugó la carta anterior no mata
-            print(f"Jugador {id_jugador_actual} no mata")
+            # print(f"Jugador {id_jugador_actual} no mata")
             return id_otro_jugador
         elif resultado == 2: # quien jugó la carta anterior mata
-            print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
+            # print(f"Jugador {id_jugador_actual} mata con {carta_respuesta}")
             nueva_carta = jugador_actual.jugar_carta()
             print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
             if len(otro_jugador.mano) > 0: # Si no es la última ronda, el otro jugador debe responder
                 nueva_carta = otro_jugador.jugar_carta()
                 print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
+                carta_jugada = nueva_carta
                 carta_respuesta = nueva_carta
+                return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, num_ronda + 1)
+                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
         else:
             print(f"Parda en ronda {num_ronda}")
             if len(jugador_actual.mano) < 0:
                 nueva_carta = jugador_actual.jugar_carta()
                 print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
+                return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
+
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, num_ronda + 1)
+                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
 
     def adjudicar_ganador_mano(self, id_ganador, se_canto_truco):
         """Suma los puntos al ganador de la mano"""
@@ -238,20 +260,23 @@ class JuegoTruco:
         print(f"Jugador 2 juega: {carta1_j2}")
         
         if resultado_inicial == 2:
-            print(f"Jugador 2 mata")
+            # print(f"Jugador 2 mata")
+            primera = 2
             nueva_carta = self.j2.jugar_carta()
             print(f"Jugador 2 juega: {nueva_carta}")
-            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 1)
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, primera, 1)
         elif resultado_inicial == 1:
-            print(f"Jugador 2 no mata")
+            # print(f"Jugador 2 no mata")
+            primera = 1
             nueva_carta = self.j1.jugar_carta()
             print(f"Jugador 1 juega: {nueva_carta}")
-            id_ganador = self.determinar_ganador_mano(self.j2, self.j1, 2, 1, nueva_carta, 1)
+            id_ganador = self.determinar_ganador_mano(self.j2, self.j1, 2, 1, nueva_carta, primera, 2)
         else:
             print("Parda en ronda 1")
+            primera = 0
             nueva_carta = self.j2.jugar_carta()
             print(f"Jugador 2 juega: {nueva_carta}")
-            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, 1)
+            id_ganador = self.determinar_ganador_mano(self.j1, self.j2, 1, 2, nueva_carta, primera, 2)
         
         self.adjudicar_ganador_mano(id_ganador, se_canto_truco)
         self.canto_truco.nivel_truco = 1  # Reiniciamos el nivel de truco para la próxima mano
