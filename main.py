@@ -43,30 +43,32 @@ juego_flor = JuegoFlor(j1, j2, canto_envido, tanteador)
 juego_envido = JuegoEnvido(j1, j2, canto_envido, tanteador)
 
 
-
-# cartas_j1 = [Carta(1, "Espada"), Carta(6, "Espada"), Carta(2, "Espada")]
-# cartas_j2 = [Carta(5, "Oro"), Carta(6, "Basto"), Carta(2, "Basto")]
+# cartas_j1 = [Carta(4, "Copa"), Carta(4, "Basto"), Carta(3, "Espada")]
+# cartas_j2 = [Carta(4, "Oro"), Carta(1, "Basto"), Carta(3, "Basto")]
 
 # j1.mano = cartas_j1
 # j2.mano = cartas_j2
+
+mano = j1
+pie = j2
 
 while not tanteador.ganador():
     flor_ganadora_1 = []
     flor_ganadora_2 = []
     mazo = Mazo()
     mazo.mezclar()
-    j1.recibir_cartas(mazo.repartir(3))
-    j2.recibir_cartas(mazo.repartir(3))
+    mano.recibir_cartas(mazo.repartir(3))
+    pie.recibir_cartas(mazo.repartir(3))
 
 
-    print(f"\nMano J1: {j1.mano}")
-    print(f"Mano J2: {j2.mano}")
+    print(f"\nMano: {mano.mano}")
+    print(f"Pie: {pie.mano}")
 
     ganador_flor = juego_flor.verificar_flor()
     if ganador_flor == 1:
-        flor_ganadora_1 = j1.mano[:]
+        flor_ganadora_1 = mano.mano[:]
     elif ganador_flor == 2:
-        flor_ganadora_2 = j2.mano[:]
+        flor_ganadora_2 = pie.mano[:]
 
     if ganador_flor < 0:
         print("Ningún jugador tiene flor, se procede con el envido")
@@ -91,3 +93,6 @@ tanteador.mostrar()
 
 if tanteador.ganador():
     print("Ganó el jugador", tanteador.ganador())
+
+mano = pie if mano == mano else mano
+pie = mano if pie == pie else pie

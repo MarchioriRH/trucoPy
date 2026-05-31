@@ -49,6 +49,9 @@ class Jugador:
     def aceptar_vale_cuatro(self, nivel):
         return self.estrategia_truco.aceptar_vale_cuatro(self.mano, nivel, self.estado)
     
+    def decidir_empardar_jugada(self, carta_actual):
+        return self.estrategia_truco.decidir_empardar_jugada(self.mano, carta_actual)
+    
     def mostrar_mano(self):
         for i, carta in enumerate(self.mano):
             print(f"{i}: {carta}")

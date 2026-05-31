@@ -100,3 +100,24 @@ class TrucoAdaptativo(EstrategiaTruco):
             return False  # no regalo puntos
 
         return valor_truco(mejor) > 6
+
+    def decidir_empardar_jugada(self, mano, carta_actual):
+
+        especiales = {
+        (1, "Espada"),
+        (1, "Basto"),
+        (7, "Espada"),
+        (7, "Oro"),
+        }
+        
+        mejor = max(mano, key=valor_truco)
+        print(f"Mejor: {mejor}")
+        print(f"Mano: {mano}")
+        print(f"Actual: {carta_actual}")
+
+
+        if valor_truco(mejor) > 11 and carta_actual not in especiales:
+            for indice, carta in enumerate(mano):
+                if carta.numero == carta_actual.numero: # El número esta en la mano
+                    return True
+            return False
