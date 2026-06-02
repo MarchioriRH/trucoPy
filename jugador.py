@@ -1,12 +1,15 @@
 from reglas import valor_truco
+from flor import JuegoFlor
 
 class Jugador:
-    def __init__(self, nombre, estrategia_cartas, estrategia_truco, estrategia_envido, estado):
+    def __init__(self, nombre, estrategia_cartas, estrategia_truco, estrategia_envido, estrategia_flor, estado):
         self.nombre = nombre
         self. mano = []
         self.estrategia_cartas = estrategia_cartas
         self.estrategia_truco = estrategia_truco
         self.estrategia_envido = estrategia_envido
+        self.estrategia_flor = estrategia_flor
+        self.juego_flor = JuegoFlor
         self.estado = estado
 
     def recibir_cartas(self, cartas):
@@ -17,9 +20,13 @@ class Jugador:
         self.mano.remove(carta)
         return(carta)
 
-    def verificar_flor(self):
-        flor = self.estrategia_envido.verificar_flor(self.mano)
-        return(flor)
+    # def verificar_flor(self):
+    #     flor = self.estrategia_flor.verificar_flor(self.mano)
+    #     return(flor)
+
+    # def calcular_flor(self):
+    #     tanto = self.estrategia_flor.calcular_flor(self.mano)
+    #     return(tanto)
 
     def calcular_envido(self):
         tanto = self.estrategia_envido.calcular_envido(self.mano)

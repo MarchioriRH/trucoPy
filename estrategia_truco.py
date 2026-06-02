@@ -111,10 +111,6 @@ class TrucoAdaptativo(EstrategiaTruco):
         }
         
         mejor = max(mano, key=valor_truco)
-        print(f"Mejor: {mejor}")
-        print(f"Mano: {mano}")
-        print(f"Actual: {carta_actual}")
-
 
         if valor_truco(mejor) > 11 and carta_actual not in especiales:
             for indice, carta in enumerate(mano):

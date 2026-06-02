@@ -1,67 +1,6 @@
-from jugador import Jugador
+from canto_truco import CantoTruco
 from reglas import valor_truco
 from tanteador import Tanteador
-from estado_partido import EstadoPartido
-
-class CantoTruco:
-    def __init__(self):
-        self.nivel_truco = 1
-        self.ultimo_cantor = None
-        self.activo = False
-        self.terminado = False
-        self.ganador = None
-
-    def puede_cantar(self):
-        return self.nivel_truco < 4 and not self.terminado
-
-    def cantar(self, jugador):
-        print(f"Nivel: {self.nivel_truco}")
-        print(f"¿Terminado?: {self.terminado}")
-        if not self.puede_cantar():
-            return False
-
-        self.nivel_truco += 1
-        print(f"Nivel: {self.nivel_truco}")
-        self.ultimo_cantor = jugador
-        self.activo = True
-        return True
-
-    def cantar_retruco(self, jugador):
-        print(f"Nivel: {self.nivel_truco}")
-        print(f"¿Terminado?: {self.terminado}")
-        if self.nivel_truco != 2 or self.terminado:
-            return False
-
-        self.nivel_truco += 1
-        print(f"Nivel: {self.nivel_truco}")
-        self.ultimo_cantor = jugador
-        self.activo = True
-        return True
-
-    def aceptar(self):
-        self.activo = False
-    
-    def cantar_vale_cuatro(self, jugador):
-        print(f"Nivel: {self.nivel_truco}")
-        print(f"¿Terminado?: {self.terminado}")
-        if self.nivel_truco != 3 or self.terminado:
-            return False
-
-        self.nivel_truco += 1
-        print(f"Nivel: {self.nivel_truco}")
-        self.ultimo_cantor = jugador
-        self.activo = True
-        return True
-
-    def rechazar(self, jugador_que_rechaza):
-        self.terminado = True
-        self.ganador = self.ultimo_cantor
-
-    def puntos_en_juego(self):
-        return self.nivel_truco
-
-    def puntos_por_rechazo(self):
-        return self.nivel_truco - 1
 
 class JuegoTruco:
     def __init__(self, j1, j2, canto_truco, tanteador):
@@ -265,8 +204,8 @@ class JuegoTruco:
                 nueva_carta = otro_jugador.jugar_carta()
                 print(f"Jugador {id_otro_jugador} juega: {nueva_carta}")
                 carta_respuesta = nueva_carta
-                return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
+                # return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                            #    id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
                                                id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
         else:
@@ -274,8 +213,8 @@ class JuegoTruco:
             if len(jugador_actual.mano) < 0:
                 nueva_carta = jugador_actual.jugar_carta()
                 print(f"Jugador {id_jugador_actual} juega: {nueva_carta}")
-                return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
+                # return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
+                                            #    id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
 
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
                                                id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
