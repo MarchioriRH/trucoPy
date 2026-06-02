@@ -17,25 +17,12 @@ class JuegoFlor:
 
         for cartas in palos.values():
             if len(cartas) >= 3:
-                return True      
-        return False  
-
-    def calcular_flor(self, mano):
-        palos = {}
-        for carta in mano:
-            if carta.palo not in palos:
-                palos[carta.palo] = []
-            palos[carta.palo].append(carta)
-
-        for cartas in palos.values():
-            if len(cartas) >= 3:
                 return sum(carta.numero for carta in cartas[:3]) + 20
         return 0      
 
     def verificar_flor(self, jugador):
-        if self.validar_flor(jugador.mano):
+        if self.validar_flor(jugador.mano) > 0:
             print(f"Jugador {jugador.nombre} canta flor")
-            # self.canto_flor.cantar(jugador)
             return True
         return False
     
@@ -62,9 +49,7 @@ class JuegoFlor:
             flor_ganadora = self.j2.mano[:]  
 
         if ganador_flor == -1:
-            print("Ningún jugador tiene flor")
-        else:
-            self.jugador_gano_flor(ganador_flor)
+            print("Ningún jugador tiene flor")        
 
         return flor_ganadora, ganador_flor
 
