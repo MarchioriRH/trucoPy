@@ -22,6 +22,9 @@ class Tanteador:
                 return jugador
         return None
 
+    def calcular_puntos_restantes(self, jugador):
+        return max(0, self.LIMITE - self.puntos[jugador])
+
     def mostrar(self):
         print(f"Jugador 1: {self.puntos[1]} puntos")
         print(f"Jugador 2: {self.puntos[2]} puntos")

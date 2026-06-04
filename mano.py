@@ -6,6 +6,7 @@ from envido import JuegoEnvido
 from flor import JuegoFlor
 from canto_flor import CantoFlor
 from mazo import Mazo
+from carta import Carta
 
 class Mano:
     def __init__(self, j1, j2, tanteador):
@@ -32,22 +33,26 @@ class Mano:
         mazo = Mazo()
         mazo.mezclar()
 
-        self.j1.recibir_cartas(mazo.repartir(3))
-        self.j2.recibir_cartas(mazo.repartir(3))
+        # self.j1.recibir_cartas(mazo.repartir(3))
+        # self.j2.recibir_cartas(mazo.repartir(3))
+
+        self.j1.mano = [Carta(6, 'oro'), Carta(2, 'oro'), Carta(4, 'oro')]
+        self.j2.mano = [Carta(1, 'basto'), Carta(3, 'basto'), Carta(4, 'basto')]
 
         print(f"\nMano: {self.j1.mano}")
         print(f"Pie: {self.j2.mano}")
 
         flor_ganadora, ganador_flor = self.juego_flor.jugar_flor()
 
-        if ganador_flor < 0:
-            print("Se procede con el envido")
-        
-            if not se_canto_envido: 
-                self.juego_envido.jugar_envido()        
+        if not self.tanteador.ganador():
+            if ganador_flor < 0:
+                print("Se procede con el envido")
+            
+                if not se_canto_envido: 
+                    self.juego_envido.jugar_envido()        
 
-        if not se_canto_truco:
-            self.juego_truco.jugar_truco()
+            if not se_canto_truco:
+                self.juego_truco.jugar_truco()
             
         if flor_ganadora != []:
             print(f"Flor ganadora Jugador {ganador_flor}: {flor_ganadora}")

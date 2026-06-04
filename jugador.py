@@ -20,13 +20,16 @@ class Jugador:
         self.mano.remove(carta)
         return(carta)
 
-    # def verificar_flor(self):
-    #     flor = self.estrategia_flor.verificar_flor(self.mano)
-    #     return(flor)
+    def validar_flor(self, mano):
+        valor_flor = self.juego_flor.validar_flor(self, mano)
+        return(valor_flor)
 
     # def calcular_flor(self):
     #     tanto = self.estrategia_flor.calcular_flor(self.mano)
     #     return(tanto)
+
+    def decidir_cantar_contraflor(self):
+        return self.estrategia_flor.decidir_cantar_contraflor(self, self.estado)
 
     def calcular_envido(self):
         tanto = self.estrategia_envido.calcular_envido(self.mano)

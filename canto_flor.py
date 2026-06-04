@@ -1,18 +1,18 @@
 class CantoFlor:
     def __init__(self):
-        self.nivel = 1
+        self.nivel = 0
         self.ultimo_cantor = None
         self.activo = False
         self.terminado = False
         self.ganador = None
 
     def puede_cantar(self):
-        return self.nivel < 2 and not self.terminado
+        return self.nivel <= 3 and not self.terminado
 
     def cantar(self, jugador):
         if not self.puede_cantar():
             return False
-        self.nivel += 2
+        self.nivel += 3
         self.ultimo_cantor = jugador
         self.activo = True
         return True
