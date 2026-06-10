@@ -26,6 +26,45 @@ class JuegoFlor:
             return True
         return False
     
+    def definir_ganador_contra_flor(self, contra_flor):
+            if contra_flor == 1:
+                print("Jugador 2 canta contra flor al resto.")
+                if self.j1.estrategia_flor.decidir_aceptar_contraflor_al_resto(self.j1, self.j1.estado):
+                    print("Jugador 1 quiere.")
+                    ganador_flor = self.definir_ganador()
+                    if self.tanteador.esta_en_buenas(ganador_flor):                            
+                        self.tanteador.sumar_puntos(ganador_flor, self.tanteador.calcular_puntos_restantes(1))
+                    else:
+                        self.tanteador.sumar_puntos(ganador_flor, 15 - self.tanteador.puntos_jugador(ganador_flor))
+                    flor_ganadora = self.j1.mano[:] if ganador_flor == 1 else self.j2.mano[:]
+                    self.canto_flor.terminado = True
+                    return flor_ganadora, ganador_flor
+                else:
+                    print("Jugador 1 no quiere.")
+                    self.canto_flor.rechazar(self.j1)
+                    ganador_flor = 2            
+                    self.tanteador.sumar_puntos(ganador_flor, self.canto_flor.puntos_por_rechazo())
+                    flor_ganadora = []
+                    print(f"Puntos en juego: {self.canto_flor.puntos_por_rechazo()}")
+                    return flor_ganadora, ganador_flor
+            elif contra_flor == 2:
+                print("Jugador 2 canta contra flor al partido.")
+                if self.j1.estrategia_flor.decidir_aceptar_contraflor_al_partido(self.j1, self.j1.estado):
+                    print("Jugador 1 quiere.")
+                    ganador_flor = self.definir_ganador()
+                    self.tanteador.sumar_puntos(ganador_flor, self.tanteador.calcular_puntos_restantes())
+                    flor_ganadora = self.j1.mano[:] if ganador_flor == 1 else self.j2.mano[:]
+                    self.canto_flor.terminado = True
+                    return flor_ganadora, ganador_flor
+                else:
+                    print("Jugador 1 no quiere.")
+                    self.canto_flor.rechazar(self.j1)
+                    ganador_flor = 2            
+                    self.tanteador.sumar_puntos(ganador_flor, self.canto_flor.puntos_por_rechazo())
+                    flor_ganadora = []
+                    print(f"Puntos en juego: {self.canto_flor.puntos_por_rechazo()}")
+                    return flor_ganadora, ganador_flor
+    
     def jugar_flor(self):
         flor_ganadora = []
         ganador_flor = -1     
@@ -33,46 +72,9 @@ class JuegoFlor:
             print(f"Jugador 1 canta flor")
             self.canto_flor.cantar(self.j1)        
             self.canto_flor.cantar(self.j2)      
-            contra_flor1 = self.j2.estrategia_flor.decidir_cantar_contra_flor(self.j2, self.j2.estado)
-            if contra_flor1 > 0:
-                if contra_flor1 == 1:
-                    print("Jugador 2 canta contra flor al resto.")
-                    if self.j1.estrategia_flor.decidir_aceptar_contraflor_al_resto(self.j1, self.j1.estado):
-                        print("Jugador 1 quiere.")
-                        ganador_flor = self.definir_ganador()
-                        if self.tanteador.esta_en_buenas(ganador_flor):                            
-                            self.tanteador.sumar_puntos(ganador_flor, self.tanteador.calcular_puntos_restantes(1))
-                        else:
-                            self.tanteador.sumar_puntos(ganador_flor, 15 - self.tanteador.puntos_jugador(ganador_flor))
-                        flor_ganadora = self.j1.mano[:] if ganador_flor == 1 else self.j2.mano[:]
-                        self.canto_flor.terminado = True
-                        return flor_ganadora, ganador_flor
-                    else:
-                        print("Jugador 1 no quiere.")
-                        self.canto_flor.rechazar(self.j1)
-                        ganador_flor = 2            
-                        self.tanteador.sumar_puntos(ganador_flor, self.canto_flor.puntos_por_rechazo())
-                        flor_ganadora = []
-                        print(f"Puntos en juego: {self.canto_flor.puntos_por_rechazo()}")
-                        return flor_ganadora, ganador_flor
-                elif contra_flor1 == 2:
-                    print("Jugador 2 canta contra flor al partido.")
-                    if self.j1.estrategia_flor.decidir_aceptar_contraflor_al_partido(self.j1, self.j1.estado):
-                        print("Jugador 1 quiere.")
-                        ganador_flor = self.definir_ganador()
-                        self.tanteador.sumar_puntos(ganador_flor, self.tanteador.calcular_puntos_restantes())
-                        flor_ganadora = self.j1.mano[:] if ganador_flor == 1 else self.j2.mano[:]
-                        self.canto_flor.terminado = True
-                        return flor_ganadora, ganador_flor
-                    else:
-                        print("Jugador 1 no quiere.")
-                        self.canto_flor.rechazar(self.j1)
-                        ganador_flor = 2            
-                        self.tanteador.sumar_puntos(ganador_flor, self.canto_flor.puntos_por_rechazo())
-                        flor_ganadora = []
-                        print(f"Puntos en juego: {self.canto_flor.puntos_por_rechazo()}")
-                        return flor_ganadora, ganador_flor
-                    
+            contra_flor = self.j2.estrategia_flor.decidir_cantar_contra_flor(self.j2, self.j2.estado)
+            if contra_flor > 0:
+                return self.definir_ganador_contra_flor(contra_flor)                    
             else:            
                 print(f"Jugador {j1.nombre} canta flor")
                 print(f"Jugador {j2.nombre} canta flor")
