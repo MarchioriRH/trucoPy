@@ -33,12 +33,12 @@ class Mano:
         mazo = Mazo()
         mazo.mezclar()
 
-        self.j1.recibir_cartas(mazo.repartir(3))
-        self.j2.recibir_cartas(mazo.repartir(3))
+        # self.j1.recibir_cartas(mazo.repartir(3))
+        # self.j2.recibir_cartas(mazo.repartir(3))
 
         # Para pruebas, asignamos manualmente las cartas a cada jugador
-        # self.j1.mano = [Carta(6, 'oro'), Carta(2, 'oro'), Carta(4, 'oro')]
-        # self.j2.mano = [Carta(5, 'basto'), Carta(6, 'basto'), Carta(7, 'basto')]
+        self.j1.mano = [Carta(2, 'oro'), Carta(2, 'oro'), Carta(2, 'oro')]
+        self.j2.mano = [Carta(2, 'basto'), Carta(2, 'basto'), Carta(2, 'basto')]
 
         print(f"\nMano: {self.j1.mano}")
         print(f"Pie: {self.j2.mano}")

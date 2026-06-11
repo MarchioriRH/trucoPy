@@ -285,4 +285,4 @@ class JuegoTruco:
             if num_ronda == 3:
                 print(f"Parda en la última ronda, gana {self.j1.nombre} por ser mano")
                 return 1
-            return self.determinar_ganador_parda(jugador_actual, otro_jugador, mano, num_ronda + 1)
+            return self.definir_ganador_parda_primera_mano(jugador_actual, otro_jugador, mano, num_ronda + 1)

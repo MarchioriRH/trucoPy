@@ -71,7 +71,12 @@ class JuegoFlor:
                 return self.definir_ganador_contra_flor(contra_flor)                    
             else: 
                 print(f"{self.j2.nombre} canta flor")
+                print("Ambos jugadores cantaron flor, se procede a comparar")
                 ganador_flor = self.definir_ganador()
+                print(f"Ganador de la flor: {ganador_flor}")
+                if ganador_flor == 0:
+                    print(f"Empate en la flor, gana {self.j1.nombre} por ser mano")
+                    ganador_flor = 1
 
         elif self.verificar_flor(self.j1):
             print(f"{self.j1.nombre} canta flor")
