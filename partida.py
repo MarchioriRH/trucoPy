@@ -14,8 +14,8 @@ class Partida:
                             self.tanteador.puntos_jugador(1),
                             self.tanteador.puntos_jugador(2)
                         )
-        self.j1 = Jugador("Jugador 1", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), FlorAdaptativa(), self.estado)
-        self.j2 = Jugador("Jugador 2", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), FlorAdaptativa(), self.estado)
+        self.j1 = Jugador("Pedro", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), FlorAdaptativa(), self.estado)
+        self.j2 = Jugador("Mario", CartaMejor(), TrucoAdaptativo(), EnvidoAdaptativo(), FlorAdaptativa(), self.estado)
 
     def jugar_partida(self):
         mano = self.j1
@@ -30,7 +30,8 @@ class Partida:
             pie = cambio_de_mano
 
         print("\nTanteador final: ")
-        self.tanteador.mostrar()
+        self.tanteador.mostrar(self.j1, self.j2)
 
         if self.tanteador.ganador():
-            print("Ganó el jugador", self.tanteador.ganador())
+            ganador = self.tanteador.ganador()
+            print(f"Ganó {self.j1.nombre if ganador == 1 else self.j2.nombre} el partido")

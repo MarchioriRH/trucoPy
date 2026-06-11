@@ -25,6 +25,10 @@ class Tanteador:
     def calcular_puntos_restantes(self, jugador):
         return max(0, self.LIMITE - self.puntos[jugador])
 
-    def mostrar(self):
-        print(f"Jugador 1: {self.puntos[1]} puntos")
-        print(f"Jugador 2: {self.puntos[2]} puntos")
+    def calcular_puntos_restantes_al_partido(self):
+        ganando = max(self.puntos[1], self.puntos[2])
+        return max(0, self.LIMITE - ganando)
+
+    def mostrar(self, j1, j2):
+        print(f">>> {j1.nombre}: {self.puntos[1]} puntos")
+        print(f">>> {j2.nombre}: {self.puntos[2]} puntos")

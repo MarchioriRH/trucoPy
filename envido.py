@@ -11,8 +11,8 @@ class JuegoEnvido:
         tanto_j1 = self.j1.calcular_envido()
         tanto_j2 = self.j2.calcular_envido()
 
-        print(f"J1 canta: {tanto_j1}")
-        print(f"J2 canta: {tanto_j2}")
+        print(f"{self.j1.nombre} canta: {tanto_j1}")
+        print(f"{self.j2.nombre} canta: {tanto_j2}")
         
         #Ver porque suma todos los puntos. Ordenar main.
         if tanto_j1 > tanto_j2:
@@ -23,11 +23,14 @@ class JuegoEnvido:
             parda = True
             self.mostrar_ganador_envido(1)
 
+    def nombre_jugador(self, id_jugador):
+        return self.j1.nombre if id_jugador == 1 else self.j2.nombre
+   
     def mostrar_ganador_envido(self, ganador):
         if ganador == 0:
-            print("Parde en el envido, gana J1 por ser mano")
+            print(f"Parda en el envido, gana {self.j1.nombre} por ser mano")
         else:
-            print(f"Jugador {ganador} gana el envido")
+            print(f"Jugador {self.nombre_jugador(ganador)} gana el envido")
         
         print(f"Puntos en juego: {self.canto_envido.puntos_en_juego()}")
         self.tanteador.sumar_puntos(ganador, self.canto_envido.puntos_en_juego())
@@ -66,15 +69,15 @@ class JuegoEnvido:
 
     def jugador_canto_envido(self, jugador):
         self.canto_envido.cantar(jugador)
-        print(f"Jugador {jugador} canta Envido")
+        print(f"{self.nombre_jugador(jugador)} canta Envido")
     
     def jugador_quiso_envido(self, jugador):
         self.canto_envido.aceptar()
-        print(f"Jugador {jugador} quiso")
+        print(f"{self.nombre_jugador(jugador)} quiso")
         self.comparar_tantos()
     
     def jugador_no_quiso_envido(self, jugador):
         self.canto_envido.rechazar(jugador)
-        print(f"Jugador {jugador} no quiso")
-        print(f"Jugador {jugador} gana", self.canto_envido.puntos_por_rechazo())
+        print(f"{self.nombre_jugador(jugador)} no quiso")
+        print(f"{self.nombre_jugador(1 if jugador == 2 else 2)} gana", self.canto_envido.puntos_por_rechazo())
         self.tanteador.sumar_puntos(jugador, self.canto_envido.puntos_por_rechazo())

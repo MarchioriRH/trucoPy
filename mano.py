@@ -33,11 +33,12 @@ class Mano:
         mazo = Mazo()
         mazo.mezclar()
 
-        # self.j1.recibir_cartas(mazo.repartir(3))
-        # self.j2.recibir_cartas(mazo.repartir(3))
+        self.j1.recibir_cartas(mazo.repartir(3))
+        self.j2.recibir_cartas(mazo.repartir(3))
 
-        self.j1.mano = [Carta(6, 'oro'), Carta(2, 'oro'), Carta(4, 'oro')]
-        self.j2.mano = [Carta(1, 'basto'), Carta(3, 'basto'), Carta(4, 'basto')]
+        # Para pruebas, asignamos manualmente las cartas a cada jugador
+        # self.j1.mano = [Carta(6, 'oro'), Carta(2, 'oro'), Carta(4, 'oro')]
+        # self.j2.mano = [Carta(5, 'basto'), Carta(6, 'basto'), Carta(7, 'basto')]
 
         print(f"\nMano: {self.j1.mano}")
         print(f"Pie: {self.j2.mano}")
@@ -55,10 +56,10 @@ class Mano:
                 self.juego_truco.jugar_truco()
             
         if flor_ganadora != []:
-            print(f"Flor ganadora Jugador {ganador_flor}: {flor_ganadora}")
+            print(f"Flor ganadora de {self.j1.nombre if ganador_flor == 1 else self.j2.nombre}: {flor_ganadora}")
 
         print("\nResultado parcial:")
 
-        self.tanteador.mostrar()
+        self.tanteador.mostrar(self.j1, self.j2)
 
     

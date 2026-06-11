@@ -12,7 +12,6 @@ class CantoEnvido:
     def cantar(self, jugador):
         if not self.puede_cantar():
             return False
-        print(f"Nivel envido: {self.nivel}, puntos en juego: {self.puntos_en_juego()}")
         self.nivel += 1
         self.ultimo_cantor = jugador
         self.activo = True
