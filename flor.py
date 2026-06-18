@@ -10,6 +10,8 @@ class JuegoFlor:
 
     def validar_flor(self, mano):
         palos = {}
+        negras = [10, 11, 12]
+
         for carta in mano:
             if carta.palo not in palos:
                 palos[carta.palo] = []
@@ -17,11 +19,13 @@ class JuegoFlor:
 
         for cartas in palos.values():
             if len(cartas) >= 3:
-                return sum(carta.numero for carta in cartas[:3]) + 20
+                return sum(carta.numero for carta in cartas[:3] if carta.numero not in negras) + 20
         return 0      
 
     def verificar_flor(self, jugador):
-        if self.validar_flor(jugador.mano) > 0:
+        valor_flor = self.validar_flor(jugador.mano)
+        print(f"Valor flor de {jugador.nombre}: {valor_flor}")
+        if valor_flor > 0:
             return True
         return False
     
@@ -55,14 +59,18 @@ class JuegoFlor:
     def jugador_no_quiere_contra_flor(self):
         print(f"{self.j1.nombre} no quiere.")
         self.canto_flor.rechazar(self.j1)
-        self.tanteador.sumar_puntos(ganador_flor, self.canto_flor.puntos_por_rechazo())
+        self.tanteador.sumar_puntos(2, self.canto_flor.puntos_por_rechazo())
         print(f"Puntos en juego: {self.canto_flor.puntos_por_rechazo()}")
         return [], 2
 
     def jugar_flor(self):
         flor_ganadora = []
-        ganador_flor = -1     
-        if self.verificar_flor(self.j1) and self.verificar_flor(self.j2):
+        ganador_flor = -1  
+
+        valor_flor_j1 = self.validar_flor(self.j1.mano)
+        valor_flor_j2 = self.validar_flor(self.j2.mano)
+
+        if valor_flor_j1 > 0 and valor_flor_j2 > 0:
             print(f"{self.j1.nombre} canta flor")
             self.canto_flor.cantar(self.j1)        
             self.canto_flor.cantar(self.j2)      
@@ -72,20 +80,20 @@ class JuegoFlor:
             else: 
                 print(f"{self.j2.nombre} canta flor")
                 print("Ambos jugadores cantaron flor, se procede a comparar")
-                ganador_flor = self.definir_ganador()
+                ganador_flor = self.definir_ganador(valor_flor_j1, valor_flor_j2)
                 print(f"Ganador de la flor: {ganador_flor}")
                 if ganador_flor == 0:
                     print(f"Empate en la flor, gana {self.j1.nombre} por ser mano")
                     ganador_flor = 1
 
-        elif self.verificar_flor(self.j1):
+        elif valor_flor_j1 > 0:
             print(f"{self.j1.nombre} canta flor")
             self.canto_flor.cantar(self.j1)
-            ganador_flor = 1
-        elif self.verificar_flor(self.j2):
+            ganador_flor = self.jugador_gano_flor(1)
+        elif valor_flor_j2 > 0:
             print(f"{self.j2.nombre} canta flor")
             self.canto_flor.cantar(self.j2)
-            ganador_flor = 2
+            ganador_flor = self.jugador_gano_flor(2)
 
         flor_ganadora = self.obtener_flor_ganadora(ganador_flor)
 
@@ -102,14 +110,14 @@ class JuegoFlor:
         else:
             return []
 
-    def definir_ganador(self):
-        res = self.comparar_flor()        
+    def definir_ganador(self, valor_flor_j1, valor_flor_j2):
+        res = self.comparar_flor(valor_flor_j1, valor_flor_j2)        
         return 1 if res == 1 else 2 if res == 2 else 0
 
-    def comparar_flor(self):
-        f1 = self.validar_flor(self.j1.mano)
+    def comparar_flor(self, valor_flor_j1, valor_flor_j2):
+        f1 = valor_flor_j1
         print(f"Valor flor {self.j1.nombre}: {f1}")
-        f2 = self.validar_flor(self.j2.mano)
+        f2 = valor_flor_j2
         print(f"Valor flor {self.j2.nombre}: {f2}")
         return 1 if f1 > f2 else 2 if f2 > f1 else 0
 
