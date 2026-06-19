@@ -1,4 +1,4 @@
-
+from canto_envido import CantoEnvido
 
 class EstrategiaEnvido:
     def decidir_cantar(self, mano, estado):
@@ -18,6 +18,11 @@ class EnvidoConservador(EstrategiaEnvido):
         return False
 
 class EnvidoAdaptativo(EstrategiaEnvido): 
+
+    def __init__(self):
+        self.canto_envido = CantoEnvido()
+        self.nivel = self.canto_envido.nivel
+
     def decidir_cantar(self, mano, estado):
         # calcular_envido = CalcularEnvido()
         tanto = self.calcular_envido(mano)
@@ -35,10 +40,10 @@ class EnvidoAdaptativo(EstrategiaEnvido):
         # Partido parejo
         return tanto > 27
 
-    def aceptar(self, mano, nivel, estado):
+    def decidir_aceptar_envido(self, mano, estado):
         # calcular_envido = CalcularEnvido()
         tanto = self.calcular_envido(mano)
-        riesgo = nivel
+        riesgo = self.nivel
 
         ventaja = estado.puntos_j1 - estado.puntos_j2
 
@@ -82,24 +87,24 @@ class EnvidoAdaptativo(EstrategiaEnvido):
 
     def decidir_re_envidar(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 28 and estado.nivel_envido < 3
+        return tanto > 28 and self.nivel < 3
 
     def decidir_aceptar_re_envido(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 25 or estado.nivel_envido < 2
+        return tanto > 25 or self.nivel < 2
 
     def decidir_cantar_real_envido(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 30 and estado.nivel_envido < 4
+        return tanto > 30 and self.nivel < 4
     
     def decidir_aceptar_real_envido(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 27 or estado.nivel_envido < 3
+        return tanto > 27 or self.nivel < 3
 
     def decidir_cantar_falta_envido(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 32 and estado.nivel_envido < 5
+        return tanto > 32 and self.nivel < 5
 
     def decidir_aceptar_falta_envido(self, mano, estado):
         tanto = self.calcular_envido(mano)
-        return tanto > 30 or estado.nivel_envido < 4
+        return tanto > 30 or self.nivel < 4

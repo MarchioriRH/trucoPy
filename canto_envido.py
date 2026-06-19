@@ -9,10 +9,10 @@ class CantoEnvido:
     def puede_cantar(self):
         return self.nivel < 4 and not self.terminado
 
-    def cantar(self, jugador):
+    def cantar(self, jugador, nivel):
         if not self.puede_cantar():
             return False
-        self.nivel += 1
+        self.nivel = nivel
         self.ultimo_cantor = jugador
         self.activo = True
         return True

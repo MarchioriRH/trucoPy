@@ -31,6 +31,28 @@ def valor_truco(carta):
     if carta.numero == 4:
         return 1
 
+REGLAS_TANTO = {
+    "NADA": {
+        "opciones": ["ENVIDO", "REAL_ENVIDO", "FALTA_ENVIDO"],
+        "puntos_quiero": 0, "puntos_no_quiero": 0
+    },
+    "ENVIDO": {
+        "opciones": ["QUIERO", "NO_QUIERO", "ENVIDO", "REAL_ENVIDO", "FALTA_ENVIDO"],
+        "puntos_quiero": 2, "puntos_no_quiero": 1
+    },
+    "ENVIDO_ENVIDO": {
+        "opciones": ["QUIERO", "NO_QUIERO", "REAL_ENVIDO", "FALTA_ENVIDO"],
+        "puntos_quiero": 4, "puntos_no_quiero": 2
+    },
+    "REAL_ENVIDO": {
+        "opciones": ["QUIERO", "NO_QUIERO", "FALTA_ENVIDO"],
+        "puntos_quiero": 3, "puntos_no_quiero": 1  # Nota: estos puntos se suman si viene de un envido previo
+    },
+    "FALTA_ENVIDO": {
+        "opciones": ["QUIERO", "NO_QUIERO"],
+        "puntos_quiero": "FALTA", "puntos_no_quiero": 1
+    }
+}
 
 
    
