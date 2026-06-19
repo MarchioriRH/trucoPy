@@ -54,5 +54,27 @@ REGLAS_TANTO = {
     }
 }
 
+REGLAS_TRUCO = {
+    "NADA": {
+        "opciones": ["QUIERO", "NO QUIERO", "TRUCO", "RETRUCO", "VALE_CUATRO"],
+        "puntos_quiero": 0, "puntos_no_quiero": 0
+    },
+    "TRUCO": {
+        "opciones": ["QUIERO", "NO QUIERO", "RETRUCO", "VALE_CUATRO"],
+        "puntos_quiero": 2, "puntos_no_quiero": 1
+    },
+    "RETRUCO": {
+        "opciones": ["QUIERO", "NO QUIERO", "VALE_CUATRO"],
+        "puntos_quiero": 3, "puntos_no_quiero": 2
+    },
+    "VALE_CUATRO": {
+        "opciones": ["QUIERO", "NO QUIERO"],
+        "puntos_quiero": 4, "puntos_no_quiero": 3
+    }
+}
+
+
+
+
 
    

@@ -28,9 +28,9 @@ class Partida:
             nueva_mano = Mano(mano, pie, self.tanteador)            
             nueva_mano.jugar_mano()            
             
-            cambio_de_mano = mano
-            mano = pie 
-            pie = cambio_de_mano
+            # cambio_de_mano = mano
+            # mano = pie 
+            # pie = cambio_de_mano
             ronda += 1
 
             print("\nResultado parcial:")

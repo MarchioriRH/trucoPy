@@ -50,7 +50,7 @@ class Mano:
                 print("Se procede con el envido")
             
                 if not se_canto_envido: 
-                    self.juego_envido.jugar_envido()        
+                    self.juego_envido.jugar_envido(1)        
 
             if not se_canto_truco:
                 self.juego_truco.jugar_truco()

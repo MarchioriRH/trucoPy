@@ -5,81 +5,16 @@ class JuegoEnvido:
         self.j1 = j1
         self.j2 = j2
         self.tanteador = tanteador
-        self.canto_envido = canto_envido
-
-    def comparar_tantos(self, puntos_acumulados):
-        global parda
-
-        tanto_j1 = self.j1.calcular_envido()
-        tanto_j2 = self.j2.calcular_envido()
-
-        print(f"{self.j1.nombre} canta: {tanto_j1}")
-        print(f"{self.j2.nombre} canta: {tanto_j2}")
-        
-        #Ver porque suma todos los puntos. Ordenar main.
-        if tanto_j1 > tanto_j2:
-            self.mostrar_ganador_envido(1, puntos_acumulados)
-        elif tanto_j1 < tanto_j2:
-            self.mostrar_ganador_envido(2, puntos_acumulados)        
-        else:
-            parda = True
-            self.mostrar_ganador_envido(1, puntos_acumulados)  # En caso de parda, gana el que es mano (jugador 1)
-
-    def nombre_jugador(self, id_jugador):
-        return self.j1.nombre if id_jugador == 1 else self.j2.nombre
-   
-    def mostrar_ganador_envido(self, ganador, puntos_acumulados):
-        if ganador == 0:
-            print(f"Parda en el envido, gana {self.j1.nombre} por ser mano")
-        else:
-            print(f"Jugador {self.nombre_jugador(ganador)} gana el envido")
-        
-        print(f"Puntos en juego: {puntos_acumulados}")
-        print(f"Tantos ganador {self.nombre_jugador(ganador)} antes: {self.tanteador.puntos_jugador(ganador)}")
-        self.tanteador.sumar_puntos(ganador, puntos_acumulados)        
-        print(f"Tantos ganador {self.nombre_jugador(ganador)} despues: {self.tanteador.puntos_jugador(ganador)}")
-        print(f"Tandos perdedor {self.nombre_jugador(2 if ganador == 1 else 1)}: {self.tanteador.puntos_jugador(2 if ganador == 1 else 1)}")
-
-    # def jugar_envido(self): 
-    #     no_quiero_envido = False
-    #     se_canto_envido = False
-        
-    #     if self.j1.decidir_cantar_envido():
-    #         self.jugador_canto_envido(1)
-    #         se_canto_envido = True
-            
-    #         if not self.j2.aceptar_envido(self.j2.mano):
-    #             no_quiero_envido = True
-    #             self.jugador_no_quiso_envido(2)
-                                
-    #         else:
-    #             self.jugador_quiso_envido(2)
-               
-    #     elif self.j2.decidir_cantar_envido():
-    #         self.jugador_canto_envido(2)
-    #         se_canto_envido = True
-
-    #         if not self.j1.aceptar_envido(self.j1.mano):
-    #             no_quiero_envido = True
-    #             self.jugador_no_quiso_envido(1)
-                               
-    #         else:
-    #             self.jugador_quiso_envido(1)
-               
-    #     if no_quiero_envido:
-    #         print("No se quiso el envido, se procede al truco")
-    #     if not se_canto_envido:
-    #         print("No se canto el envido, se procede al truco")
-    #         se_canto_envido = True
-
-    def jugar_envido(self):
+        self.canto_envido = canto_envido    
+    
+    def jugar_envido(self, mano):
         estado_actual = "NADA"
         puntos_acumulados_quiero = 0
         puntos_acumulados_no_quiero = 1 # El mínimo por no querer nada es 1
         
         # Definimos quién arranca (ej: jugador 1)
         jugadores_que_pasaron = 0
-        turno = 1 
+        turno = mano 
         
         while True:
             jugador_actual = self.j1 if turno == 1 else self.j2
@@ -181,18 +116,40 @@ class JuegoEnvido:
         return "QUIERO" if jugador.decidir_aceptar_envido() else "NO_QUIERO"
 
 
+    def comparar_tantos(self, puntos_acumulados):
+        global parda
+        # Se obtiene el valor de envido de cada judada
+        tanto_j1 = self.j1.calcular_envido()
+        tanto_j2 = self.j2.calcular_envido()
 
-    # def jugador_canto_envido(self, jugador):
-    #     self.canto_envido.cantar(jugador)
-    #     print(f"{self.nombre_jugador(jugador)} canta Envido")
+        print(f"{self.j1.nombre} canta: {tanto_j1}")
+        print(f"{self.j2.nombre} canta: {tanto_j2}")
+        
+        # Se comparan los valores obtenidos para saber el ganador.
+        if tanto_j1 > tanto_j2:
+            self.mostrar_ganador_envido(1, puntos_acumulados)
+        elif tanto_j1 < tanto_j2:
+            self.mostrar_ganador_envido(2, puntos_acumulados)        
+        else:
+            print(f"Parda en el envido, gana {self.j1.nombre} por ser mano")
+            self.mostrar_ganador_envido(1, puntos_acumulados)  # En caso de parda, gana el que es mano (jugador 1)
+
+    def nombre_jugador(self, id_jugador):
+        return self.j1.nombre if id_jugador == 1 else self.j2.nombre
+   
+    def mostrar_ganador_envido(self, ganador, puntos_acumulados):
+        print(f"Jugador {self.nombre_jugador(ganador)} gana el envido")
+        print(f"Ganador: {ganador}")
+        print(f"Puntos en juego: {puntos_acumulados}")
+        print(f"Tantos ganador {self.nombre_jugador(ganador)} antes: {self.tanteador.puntos_jugador(ganador)}")
+        self.tanteador.sumar_puntos(ganador, puntos_acumulados)        
+        print(f"Tantos ganador {self.nombre_jugador(ganador)} despues: {self.tanteador.puntos_jugador(ganador)}")
+        print(f"Tantos perdedor {self.nombre_jugador(2 if ganador == 1 else 1)}: {self.tanteador.puntos_jugador(2 if ganador == 1 else 1)}")
+
+   
     
     def jugador_quiso(self, jugador, puntos_acumulados):
         self.canto_envido.aceptar()
         print(f"{self.nombre_jugador(jugador)} quiso")
         self.comparar_tantos(puntos_acumulados)
-    
-    # def jugador_no_quiso_envido(self, jugador):
-    #     self.canto_envido.rechazar(jugador)
-    #     print(f"{self.nombre_jugador(jugador)} no quiso")
-    #     print(f"{self.nombre_jugador(1 if jugador == 2 else 2)} gana", self.canto_envido.puntos_por_rechazo())
-    #     self.tanteador.sumar_puntos(jugador, self.canto_envido.puntos_por_rechazo())
+   
