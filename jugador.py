@@ -38,6 +38,24 @@ class Jugador:
     def decidir_cantar_envido(self):
         return self.estrategia_envido.decidir_cantar(self.mano, self.estado)
 
+    def decidir_re_envidar(self):
+        return self.estrategia_envido.decidir_re_envidar(self.mano, self.estado)
+    
+    def decidir_aceptar_re_envido(self):
+        return self.estrategia_envido.decidir_aceptar_re_envido(self.mano, self.estado)
+
+    def decidir_cantar_real_envido(self):
+        return self.estrategia_envido.decidir_cantar_real_envido(self.mano, self.estado)
+    
+    def decidir_aceptar_real_envido(self):
+        return self.estrategia_envido.decidir_aceptar_real_envido(self.mano, self.estado)
+
+    def decidir_cantar_real_envido(self):
+        return self.estrategia_envido.decidir_cantar_real_envido(self.mano, self.estado)
+
+    def decidir_aceptar_real_envido(self):
+        return self.estrategia_envido.decidir_aceptar_real_envido(self.mano, self.estado)
+
     def aceptar_envido(self, nivel):
         return self.estrategia_envido.aceptar(self.mano, nivel, self.estado)
 
