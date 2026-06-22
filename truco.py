@@ -144,8 +144,11 @@ class JuegoTruco:
         
         if (len(jugador_actual.mano) == 0 and len(otro_jugador.mano) == 0 and num_ronda == 3) or (len(jugador_actual.mano) == 0 and num_ronda > 1):
             return self.definir_ganador_parda_ultima_mano(id_jugador_actual, id_otro_jugador, carta_en_juego, carta_jugada, primera)
-                    
-        carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
+        if jugador_actual == 2:            
+            carta_respuesta = jugador_actual.analizar_jugada(carta_en_juego)
+        else:
+            carta_respuesta = jugador_actual.jugar_carta()
+
         print(f"{jugador_actual.nombre} juega: {carta_respuesta}")
         
         resultado = self.comparar_cartas(carta_en_juego, carta_respuesta)

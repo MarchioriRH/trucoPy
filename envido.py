@@ -23,7 +23,7 @@ class JuegoEnvido:
             # 1. Le pedimos a la estrategia del jugador su decisión basada en las opciones válidas
             opciones_validas = REGLAS_TANTO[estado_actual]["opciones"]
             
-            # Conectamos con tus métodos de estrategia según el estado
+            # El jugador decide la mejora estrategia
             decision = self.consultar_estrategia(jugador_actual, estado_actual, opciones_validas)
             
             print(f"Jugador {turno} ({jugador_actual.nombre}) decide: {decision} en estado {estado_actual}")
@@ -46,12 +46,11 @@ class JuegoEnvido:
             if decision == "QUIERO":
                 self.jugador_quiso(turno, puntos_acumulados_quiero)
                 #print(f"Se aceptó el tanto. Puntos en juego: {puntos_acumulados_quiero}")
-                # TODO: Aquí ejecutas tu método para comparar las manos reales y asignar los puntos
-                #self.mostrar_ganador_envido(1 if turno == 1 else 2, puntos_acumulados)  # Asumimos que el que canta gana por ahora
                 break
                 
             elif decision == "NO_QUIERO":
-                self.jugador_no_quiso_envido(turno)
+                # self.jugador_no_quiso_envido(turno)
+                self.tanteador.sumar_puntos(ganador, puntos_acumulados_no_quiero)  
                 ganador_puntos = 2 if turno == 1 else 1
                 print(f"No se quiso. Jugador {ganador_puntos} gana {puntos_acumulados_no_quiero} punto(s).")
                 break
@@ -63,7 +62,7 @@ class JuegoEnvido:
                 # Actualizamos el arrastre de puntos según la historia del canto
                 nuevo_estado = decision if (estado_actual != "ENVIDO" or decision != "ENVIDO") else "ENVIDO_ENVIDO"
                 
-                # Lógica de acumulación del Truco:
+                # Lógica de acumulación del Envido:
                 puntos_acumulados_no_quiero = REGLAS_TANTO[estado_actual]["puntos_quiero"] if estado_actual != "NADA" else 1
                 
                 if nuevo_estado == "ENVIDO_ENVIDO":
@@ -101,8 +100,8 @@ class JuegoEnvido:
             
         # Si el rival cantó Real Envido
         if estado_actual == "REAL_ENVIDO":
+            if jugador.decidir_cantar_falta_envido(): return "FALTA_ENVIDO"
             if jugador.decidir_aceptar_real_envido(): return "QUIERO"
-            if decidir_cantar_falta_envido(): return "FALTA_ENVIDO"
             if jugador.decidir_aceptar_real_envido(): return "QUIERO"
             if jugador.decidir_aceptar_falta_envido(): return "QUIERO"
             return "NO_QUIERO"

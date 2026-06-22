@@ -9,10 +9,11 @@ from mazo import Mazo
 from carta import Carta
 
 class Mano:
-    def __init__(self, j1, j2, tanteador):
+    def __init__(self, j1, j2, tanteador, se_juega_con_flor):
         self.j1 = j1
         self.j2 = j2
         self.tanteador = tanteador
+        self.se_juega_con_flor = se_juega_con_flor
 
         self.canto_truco = CantoTruco()
         self.canto_envido = CantoEnvido()
@@ -40,10 +41,13 @@ class Mano:
         # self.j1.mano = [Carta(12, 'oro'), Carta(2, 'oro'), Carta(4, 'oro')]
         # self.j2.mano = [Carta(2, 'basto'), Carta(4, 'basto'), Carta(6, 'basto')]
  
-        print(f"\nMano: {self.j1.mano}")
-        print(f"Pie: {self.j2.mano}")
+        print(f"\n{self.j1.nombre} Estas son tus cartas: ")
+        print(f"Mano: {self.j1.mano}")
 
-        flor_ganadora, ganador_flor = self.juego_flor.jugar_flor()
+
+        print(f"Pie: {self.j2.mano}")
+        if self.se_juega_con_flor:
+            flor_ganadora, ganador_flor = self.juego_flor.jugar_flor()
 
         if not self.tanteador.ganador():
             if ganador_flor < 0:

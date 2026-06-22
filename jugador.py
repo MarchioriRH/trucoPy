@@ -2,7 +2,7 @@ from reglas import valor_truco
 from flor import JuegoFlor
 
 class Jugador:
-    def __init__(self, nombre, estrategia_cartas, estrategia_truco, estrategia_envido, estrategia_flor, estado):
+    def __init__(self, nombre = None, estrategia_cartas = None, estrategia_truco = None, estrategia_envido = None, estrategia_flor = None, estado = None):
         self.nombre = nombre
         self. mano = []
         self.estrategia_cartas = estrategia_cartas
@@ -104,4 +104,8 @@ class Jugador:
         # print(f"Mano ordenada final: {mano_ordenada}")
         return carta_elegida  # Si no tiene carta más alta, juega la primera carta
 
-    
+class humano:
+     def __init__(self, nombre):
+        self.nombre = nombre
+        self. mano = []
+        self.estado = estado   

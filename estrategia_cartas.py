@@ -20,3 +20,5 @@ class CartaRandom(EstrategiaCartas):
     def elegir_carta(self, mano):
         return random.choice(mano)
 
+
+
