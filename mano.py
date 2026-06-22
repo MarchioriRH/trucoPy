@@ -52,12 +52,12 @@ class Mano:
         if not self.tanteador.ganador():
             if ganador_flor < 0:
                 print("Se procede con el envido")
-            
-                if not se_canto_envido: 
-                    self.juego_envido.jugar_envido(1)        
+           
+                self.juego_envido.jugar_envido(1)        
 
-            if not se_canto_truco:
-                self.juego_truco.jugar_truco()
+            print(f"¿Hay ganador?: {self.tanteador.ganador()}")
+            if not self.tanteador.ganador():
+                self.juego_truco.jugar_truco(1)
             
         if flor_ganadora != []:
             print(f"Flor ganadora de {self.j1.nombre if ganador_flor == 1 else self.j2.nombre}: {flor_ganadora}")

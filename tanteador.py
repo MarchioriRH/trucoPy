@@ -18,6 +18,7 @@ class Tanteador:
 
     def ganador(self):
         for jugador, puntos in self.puntos.items():
+            print(f"Puntos {puntos}")
             if puntos >= self.LIMITE:
                 return jugador
         return None

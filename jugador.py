@@ -103,9 +103,3 @@ class Jugador:
         self.mano.remove(carta_elegida)        
         # print(f"Mano ordenada final: {mano_ordenada}")
         return carta_elegida  # Si no tiene carta más alta, juega la primera carta
-
-class humano:
-     def __init__(self, nombre):
-        self.nombre = nombre
-        self. mano = []
-        self.estado = estado   

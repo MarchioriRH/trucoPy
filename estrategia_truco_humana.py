@@ -15,7 +15,7 @@ class TrucoHumanoAdaptativo(EstrategiaHumanaTruco):
 
         return respuesta == "S"
 
-    def aceptar(self, mano, nivel, estado):
+    def decidir_aceptar(self, mano, nivel, estado):
         respuesta = input(
                 "¿Queres aceptar el truco (S / N): "
             ).upper()
@@ -29,7 +29,7 @@ class TrucoHumanoAdaptativo(EstrategiaHumanaTruco):
 
         return respuesta == "S"
 
-    def aceptar_retruco(self, mano, nivel, estado):
+    def decidir_aceptar_retruco(self, mano, nivel, estado):
         respuesta = input(
                 "¿Queres aceptar truco (S / N): "
             ).upper()
@@ -43,7 +43,7 @@ class TrucoHumanoAdaptativo(EstrategiaHumanaTruco):
 
         return respuesta == "S"
 
-    def aceptar_vale_cuatro(self, mano, nivel, estado):
+    def decidir_aceptar_vale_cuatro(self, mano, nivel, estado):
         respuesta = input(
                 "¿Queres aceptar el vale cuatro (S / N): "
             ).upper()

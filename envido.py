@@ -44,6 +44,7 @@ class JuegoEnvido:
 
             # 2. Procesamos la decisión
             if decision == "QUIERO":
+                print(f"Puntos acumulados: {puntos_acumulados_quiero}")
                 self.jugador_quiso(turno, puntos_acumulados_quiero)
                 #print(f"Se aceptó el tanto. Puntos en juego: {puntos_acumulados_quiero}")
                 break
@@ -71,7 +72,7 @@ class JuegoEnvido:
                     # Si ya venía de un envido, se suman los puntos (2 + 3 = 5)
                     puntos_acumulados_quiero = puntos_acumulados_quiero + 3 if puntos_acumulados_quiero > 0 else 3
                 elif nuevo_estado == "FALTA_ENVIDO":
-                    puntos_acumulados_quiero = "FALTA"
+                    puntos_acumulados_quiero = self.tanteador.calcular_puntos_restantes_al_partido()
                 else:
                     puntos_acumulados_quiero = REGLAS_TANTO[nuevo_estado]["puntos_quiero"]
                 
@@ -141,7 +142,7 @@ class JuegoEnvido:
         print(f"Ganador: {ganador}")
         print(f"Puntos en juego: {puntos_acumulados}")
         print(f"Tantos ganador {self.nombre_jugador(ganador)} antes: {self.tanteador.puntos_jugador(ganador)}")
-        self.tanteador.sumar_puntos(ganador, puntos_acumulados)        
+        self.tanteador.sumar_puntos(ganador, int(puntos_acumulados))        
         print(f"Tantos ganador {self.nombre_jugador(ganador)} despues: {self.tanteador.puntos_jugador(ganador)}")
         print(f"Tantos perdedor {self.nombre_jugador(2 if ganador == 1 else 1)}: {self.tanteador.puntos_jugador(2 if ganador == 1 else 1)}")
 
