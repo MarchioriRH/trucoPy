@@ -9,10 +9,11 @@ from mazo import Mazo
 from carta import Carta
 
 class Mano:
-    def __init__(self, j1, j2, tanteador, se_juega_con_flor):
+    def __init__(self, j1, j2, tanteador, estado, se_juega_con_flor):
         self.j1 = j1
         self.j2 = j2
         self.tanteador = tanteador
+        self.estado = estado
         self.se_juega_con_flor = se_juega_con_flor
 
         self.canto_truco = CantoTruco()
@@ -20,7 +21,7 @@ class Mano:
         self.canto_flor = CantoFlor()
 
         self.juego_flor = JuegoFlor(self.j1, self.j2, self.canto_flor, self.tanteador)
-        self.juego_truco = JuegoTruco(self.j1, self.j2, self.canto_truco, self.tanteador)
+        self.juego_truco = JuegoTruco(self.j1, self.j2, self.canto_truco, self.tanteador, self.estado)
         self.juego_envido = JuegoEnvido(self.j1, self.j2, self.canto_envido, self.tanteador)
 
 
@@ -50,14 +51,14 @@ class Mano:
             flor_ganadora, ganador_flor = self.juego_flor.jugar_flor()
 
         if not self.tanteador.ganador():
-            if ganador_flor < 0:
-                print("Se procede con el envido")
+            # if ganador_flor < 0:
+            #     print("Se procede con el envido")
            
-                self.juego_envido.jugar_envido(1)        
+            #     self.juego_envido.jugar_envido(1)        
 
-            print(f"¿Hay ganador?: {self.tanteador.ganador()}")
+            # print(f"¿Hay ganador?: {self.tanteador.ganador()}")
             if not self.tanteador.ganador():
-                self.juego_truco.jugar_truco(1)
+                self.juego_truco.jugar_truco()
             
         if flor_ganadora != []:
             print(f"Flor ganadora de {self.j1.nombre if ganador_flor == 1 else self.j2.nombre}: {flor_ganadora}")

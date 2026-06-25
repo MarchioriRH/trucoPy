@@ -36,6 +36,7 @@ class TrucoAdaptativo(EstrategiaTruco):
         return valor_truco(mejor) > 9
 
     def aceptar(self, mano, nivel, estado):
+        # print(f"Mano J2: {mano}")
         mejor = max(mano, key=valor_truco)
         riesgo = nivel
 
@@ -47,7 +48,7 @@ class TrucoAdaptativo(EstrategiaTruco):
         if ventaja > 8 and riesgo >= 3:
             return False  # no regalo puntos
 
-        return valor_truco(mejor) > 6
+        return "QUIERO" if valor_truco(mejor) > 6 else "NO QUIERO"
 
     def decidir_cantar_retruco(self, mano, estado):
         mejor = max(mano, key=valor_truco)
@@ -104,16 +105,16 @@ class TrucoAdaptativo(EstrategiaTruco):
     def decidir_empardar_jugada(self, mano, carta_actual):
 
         especiales = {
-        (1, "Espada"),
-        (1, "Basto"),
-        (7, "Espada"),
-        (7, "Oro"),
+            (1, "Espada"),
+            (1, "Basto"),
+            (7, "Espada"),
+            (7, "Oro"),
         }
         
         mejor = max(mano, key=valor_truco)
 
         if valor_truco(mejor) > 11 and carta_actual not in especiales:
-            for indice, carta in enumerate(mano):
+            for carta in enumerate(mano):
                 if carta.numero == carta_actual.numero: # El número esta en la mano
                     return True
             return False

@@ -61,7 +61,7 @@ class Partida:
         while not self.tanteador.ganador():
             print(f"\n---------------------- Ronda Nº {ronda} -------------------------")
             print(f"Mano en esta ronda: {mano.nombre} (mano) vs {pie.nombre} (pie)")
-            nueva_mano = Mano(mano, pie, self.tanteador, self.se_juega_con_flor)            
+            nueva_mano = Mano(mano, pie, self.tanteador, self.estado, self.se_juega_con_flor)            
             nueva_mano.jugar_mano()            
             
             # cambio_de_mano = mano

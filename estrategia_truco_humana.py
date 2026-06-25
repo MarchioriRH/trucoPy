@@ -9,11 +9,21 @@ class EstrategiaHumanaTruco:
 
 class TrucoHumanoAdaptativo(EstrategiaHumanaTruco):
     def decidir_cantar(self, mano, estado):
+        
         respuesta = input(
                 "¿Queres cantar truco (S / N): "
             ).upper()
+        return "EstadoTruco.TRUCO_PENDIENTE" if respuesta == "S" else "EstadoTruco.VALE_1"
+        respuesta = input(
+                "¿Queres cantar re truco (S / N): "
+            ).upper()
+        return "EstadoTruco.RETRUCO_PENDIENTE" if respuesta == "S" else "EstadoTruco.VALE_1"
+        respuesta = input(
+                "¿Queres cantar vale cuatro (S / N): "
+            ).upper()    
 
-        return respuesta == "S"
+        return "EstadoTruco.VALE_CUATRO_PENDIENTE" if respuesta == "S" else "EstadoTruco.VALE_1"
+
 
     def decidir_aceptar(self, mano, nivel, estado):
         respuesta = input(

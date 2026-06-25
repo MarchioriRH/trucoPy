@@ -1,175 +1,114 @@
 from canto_truco import CantoTruco
 from reglas import valor_truco, REGLAS_TRUCO
 from tanteador import Tanteador
+import random
+from arbitro_truco import ArbitroTruco, EstadoTruco
+from estrategia_truco_humana import TrucoHumanoAdaptativo
 
 
 
 class JuegoTruco:
-    def __init__(self, j1, j2, canto_truco, tanteador):
+    def __init__(self, j1, j2, canto_truco, tanteador, estado):
         self.j1 = j1
         self.j2 = j2
         self.tanteador = tanteador
         self.canto_truco = canto_truco
-    
-    
+        self.estado = estado
+     
+        self.truco_humano = TrucoHumanoAdaptativo()
+        self.arbitro = ArbitroTruco(self.j1, self.j2)
+        self.turno_actual = "Humano"  # Quién tiene el turno para jugar/cantar
+        self.mano_finalizada = False
+
+    def jugar_truco(self):
+        while not self.mano_finalizada:
+            # 1. Verificar si hay apuestas pendientes que resolver
+            print(f"Estado actual inicial: {self.arbitro.estado_actual}")
+            if self.arbitro.estado_actual in [EstadoTruco.TRUCO_PENDIENTE, 
+                                            EstadoTruco.RETRUCO_PENDIENTE, 
+                                            EstadoTruco.VALE_4_PENDIENTE]:
+                print(f"ENTRO A RESOLVER APUESTA")
+                self.resolver_apuesta_pendiente()
+                continue  # RECOMENDADO: Reinicia el bucle para evaluar el nuevo estado consolidado
+
+            # 2. Si no hay apuestas pendientes, se juegan cartas o se canta
+            if self.turno_actual == "Humano":
+                # Condición extra: Solo canta si el estado actual permite cantar Truco (VALE_1)
+                if self.arbitro.estado_actual == EstadoTruco.VALE_1 and self.truco_humano.decidir_cantar(self.j1.mano, self.estado):
+                    self.arbitro.cantar_truco(self.j1)
+                    continue # Volvemos al inicio del while para que el if de "PENDIENTE" lo capture inmediatamente
+                
+                print(f"Estado actual antes de jugar carta: {self.arbitro.estado_actual}")
+                carta = self.j1.jugar_carta()
+                # IMPORTANTE: Aquí debes cambiar el turno o romper el bucle temporalmente 
+                # para que no sea un while infinito de la misma acción.
+                self.turno_actual = "Computadora" 
+            else:
+                self.turno_computadora(carta)
+                self.turno_actual = "Humano"
+
+    def turno_computadora(self, carta):
+        if self.arbitro.estado_actual == EstadoTruco.TRUCO:
+            if self.j2.decidir_cantar_retruco():
+                self.arbitro.cantar_retruco(self.j2)
+                return True
+            else:
+                carta_respuesta = self.j2.analizar_jugada(carta)
+                respuesta = self.comparar_cartas(carta, carta_respuesta)
+                print(f"{self.j2.nombre} jugo {carta_respuesta}")
+
+                if respuesta == 2:
+                    carta_respuesta = self.j2.jugar_carta()
+                    print(f"{self.j2.nombre} jugo {carta_respuesta}")
+                elif respuesta == 1:
+                    return False
+                return True
+
+        
+    def resolver_apuesta_pendiente(self):
+        respondedor_str = "Computadora" if self.turno_actual == "Humano" else "Humano"
+        jugador_respondedor = self.j2 if respondedor_str == "Computadora" else self.j1
+        jugador_rival = self.j1 if respondedor_str == "Computadora" else self.j2
+        
+        print(f"\n--- INTERRUPCIÓN: {respondedor_str} debe responder a la apuesta ---")
+        
+        if respondedor_str == "Computadora":
+            decision = self.j2.estrategia_truco.aceptar(self.j2.mano, self.canto_truco.nivel_truco, self.estado)
+            if decision == "QUIERO":
+                # Deja que el árbitro se encargue de todo el cambio de estado y puntos
+                self.arbitro.responder_quiero(self.j2) 
+                print(f"Estado truco despues quiero: {self.arbitro.estado_actual}")
+            else:
+                self.arbitro.responder_no_quiero(self.j2)
+                jugador_rival.puntos += self.arbitro.puntos_en_juego
+                self.mano_finalizada = True
+        else:
+            print("1. Quiero\n2. No quiero\n3. Retruco (si corresponde)")
+            opcion = input("Selecciona una opción: ")
+            if opcion == "1":
+                self.arbitro.responder_quiero(self.j1)
+            elif opcion == "2":
+                self.arbitro.responder_no_quiero(self.j1)
+                jugador_rival.puntos += self.arbitro.puntos_en_juego
+                self.mano_finalizada = True
+
+
+
+
+
+
     def nombre_jugador(self, jugador):
         return self.j1.nombre if jugador == 1 else self.j2.nombre
-    
-    def jugar_truco(self, mano):
-        estado_actual = "NADA"
-        puntos_acumulados_quiero = 0
-        puntos_acumulados_no_quiero = 1 # El mínimo por no querer nada es 1
-        
-        # Definimos quién arranca (ej: jugador 1)
-        jugadores_que_pasaron = 0
-        turno = mano 
-        
-        while True:
-            jugador_actual = self.j1 if turno == 1 else self.j2
-            rival = self.j2 if turno == 1 else self.j1
-            
-            # 1. Le pedimos a la estrategia del jugador su decisión basada en las opciones válidas
-            opciones_validas = REGLAS_TRUCO[estado_actual]["opciones"]
-            
-            # El jugador decide la mejora estrategia
-            decision = self.consultar_estrategia(jugador_actual, estado_actual, opciones_validas)
-            
-            print(f"Jugador {turno} ({jugador_actual.nombre}) decide: {decision} en estado {estado_actual}")
 
-            # --- MANEJO ESPECIAL DEL PASO ---
-            if decision == "PASO":
-                jugadores_que_pasaron += 1
-                if jugadores_que_pasaron == 2:
-                    print("Ningún jugador canto truco. Se juegan las cartas.")
-                    break # Rompe el bucle, nadie suma puntos de envido
-                
-                # Si solo pasó el primero, le damos la palabra al segundo
-                turno = 2 if turno == 1 else 1
-                continue # Salta al inicio del bucle 'while' sin ejecutar el código de abajo
-            
-            # Si alguien canta algo después de un PASO, reseteamos el contador
-            jugadores_que_pasaron = 0
-
-            # 2. Procesamos la decisión
-            if decision == "QUIERO":
-                self.jugador_quiso(turno, puntos_acumulados_quiero)
-                #print(f"Se aceptó el tanto. Puntos en juego: {puntos_acumulados_quiero}")
-                break
-                
-            elif decision == "NO_QUIERO":
-                # self.jugador_no_quiso_envido(turno)
-                self.tanteador.sumar_puntos(ganador, puntos_acumulados_no_quiero)  
-                ganador_puntos = 2 if turno == 1 else 1
-                print(f"No se quiso. Jugador {ganador_puntos} gana {puntos_acumulados_no_quiero} punto(s).")
-                break
-                
-            else:
-                # Si no es Quiero/No Quiero, es un canto (ENVIDO, REAL_ENVIDO, etc.)
-                print(f"Jugador {turno} cantó: {decision}")
-                
-                # Actualizamos el arrastre de puntos según la historia del canto
-                nuevo_estado = decision if (estado_actual != "TRUCO" or decision != "TRUCO") else "RETRUCO"
-                
-                # Lógica de acumulación del Truco:
-                puntos_acumulados_no_quiero = REGLAS_TRUCO[estado_actual]["puntos_quiero"] if estado_actual != "NADA" else 1
-                
-                if nuevo_estado == "RETRUCO":
-                    puntos_acumulados_quiero = 3
-                elif nuevo_estado == "VALE_CUATRO":
-                    puntos_acumulados_quiero = 4
-                else:
-                    puntos_acumulados_quiero = REGLAS_TRUCO[nuevo_estado]["puntos_quiero"]
-                
-                # Cambiamos el estado del tablero y pasamos el turno al rival
-                estado_actual = nuevo_estado
-                turno = 2 if turno == 1 else 1
-
-    def consultar_estrategia(self, jugador, estado_actual, opciones_validas):
-        # Si el juego recién arranca, evalúa si quiere cantar
-        if estado_actual == "NADA":
-            if jugador.decidir_cantar_truco(): return "TRUCO"
-            return "PASO" # Si no quiere cantar nada, pasa el turno implícitamente
-            
-        # Si el rival cantó Envido
-        if estado_actual == "TRUCO":
-            if jugador.decidir_cantar_retruco(): return "RETRUCO"
-            if jugador.decidir_aceptar_retruco(): return "QUIERO"
-            return "NO_QUIERO"
-            
-        # Si el rival cantó Real Envido
-        if estado_actual == "RE_TRUCO":
-            if jugador.decidir_cantar_vale_cuatro(): return "VALE_CUATRO"
-            if jugador.decidir_aceptar_vale_cuatro(): return "QUIERO"
-            return "NO_QUIERO"
-
-        # Si el rival cantó Falta Envido
-        if estado_actual == "VALE_CUATRO":
-            if jugador.decidir_aceptar_vale_cuatro(): return "QUIERO"
-            return "NO_QUIERO"  
-            
-        # Para cualquier otro estado por defecto
-        return "QUIERO" if jugador.decidir_aceptar_envido() else "NO_QUIERO"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def jugar_truco(self):
-    #     """
-    #     Lógica para jugar una mano de truco, incluyendo el canto de truco 
-    #     y la comparación de cartas.
-    #     """
-    #     no_quiero_truco = True
-    #     se_canto_truco = False
-        
-    #     if self.j1.decidir_cantar_truco():
-    #         self.jugador_canta_truco(1)
-    #         se_canto_truco = True
-
-    #         if not self.j2.aceptar_truco(self.j2.mano):
-    #             no_quiero_truco = True
-    #             self.jugador_no_quiso(1, 2)                
-    #         else:
-    #             no_quiero_truco = self.jugador_quiso_truco(2)
-                
-    #     elif self.j2.decidir_cantar_truco():
-    #         self.jugador_canta_truco(2)
-    #         se_canto_truco = True
-
-    #         if not self.j1.aceptar_truco(self.j1.mano):
-    #             no_quiero_truco = True
-    #             self.jugador_no_quiso(2, 1)            
-    #         else:
-    #             no_quiero_truco = self.jugador_quiso_truco(1)
-
-    #     elif not se_canto_truco:
-    #         print("No se cantó truco, se procede a jugar la mano sin truco")            
-    #         self.jugar_carta_mano(se_canto_truco)
-
-    #     if not no_quiero_truco:
-    #         self.jugar_carta_mano(se_canto_truco)
-    #     else:        
-    #         print("No se quiso el truco, se procede a mostrar el tanteador")
-
-    def jugador_quiso(self)
+    def jugador_quiso(self):
         pass
-    
+
     def jugador_canta_truco(self, jugador):
         self.canto_truco.cantar(jugador)
         print(f"{self.nombre_jugador(jugador)} canta Truco")
 
     def jugador_quiso_truco(self, numero):
-    
+
         jugador = self.j1 if numero == 1 else self.j2
         rival = self.j2 if jugador == self.j1 else self.j1
 
@@ -237,7 +176,7 @@ class JuegoTruco:
             return 0
 
     def determinar_ganador_mano(self, jugador_actual, otro_jugador, id_jugador_actual, id_otro_jugador, 
-                               carta_en_juego, carta_jugada, primera, num_ronda):
+                            carta_en_juego, carta_jugada, primera, num_ronda):
         """
         Método recursivo que determina el ganador de una mano.
         El flujo es: quien no mata pierde, quien mata juega otra.
@@ -283,7 +222,7 @@ class JuegoTruco:
                 # return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
                                             #    id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
+                                            id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
         else:
             print(f"Parda en ronda {num_ronda}")
             if len(jugador_actual.mano) < 0:
@@ -293,7 +232,7 @@ class JuegoTruco:
                                             #    id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
 
             return self.determinar_ganador_mano(otro_jugador, jugador_actual, id_otro_jugador, 
-                                               id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
+                                            id_jugador_actual, carta_respuesta, carta_jugada, primera, num_ronda + 1)
 
     def definir_ganador_parda_ultima_mano(self, id_jugador_actual, id_otro_jugador, carta_en_juego, carta_jugada, primera):
         """
